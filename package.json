@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "gulp"
+    "build": "gulp",
+    "build:watch": "gulp watch",
+    "lint": "tslint \"src/**/*.ts\""
   },
   "repository": {
     "type": "git",

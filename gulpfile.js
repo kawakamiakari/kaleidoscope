@@ -1,4 +1,4 @@
-const { dest, series, src } = require('gulp');
+const { dest, series, src, watch } = require('gulp');
 const clean = require('gulp-clean');
 const rename = require('gulp-rename');
 const ts = require('gulp-typescript');
@@ -36,4 +36,7 @@ function buildMinify() {
     .pipe(dest('dist'));
 }
 
+exports.watch = function() {
+  watch('src/*.ts', series(buildClean, build, buildMinify));
+};
 exports.default = series(buildClean, build, buildMinify);
