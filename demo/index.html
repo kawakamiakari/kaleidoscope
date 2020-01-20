@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Kaleidoscope</title>
+    <script>
+      window.exports = { __esModule: true };
+    </script>
+  </head>
+  <body>
+    <canvas class="background"></canvas>
+    <script src="../dist/kaleidoscope.js"></script>
+    <script>
+      window.onload = function() {
+        let kaleidoscope = new Kaleidoscope();
+        kaleidoscope.greet();
+        console.log(kaleidoscope);
+      };
+    </script>
+  </body>
+</html>

@@ -1,5 +1,22 @@
-let buildtest: string = 'test';
+export default class Kaleidoscope {
+  constructor() {
+    console.log('init');
+  }
 
-const Kaleidoscope = (function(window, document) {})(window, document);
+  public greet() {
+    console.log('hello');
+  }
+}
 
-export default Kaleidoscope;
+interface IWindow extends Window {
+  Kaleidoscope: any;
+}
+declare let window: IWindow;
+
+(() => {
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = Kaleidoscope;
+  } else {
+    window.Kaleidoscope = Kaleidoscope;
+  }
+})();
