@@ -403,6 +403,23 @@ const Kaleidoscope = (() => {
       cancelAnimationFrame(this.animationID);
     }
 
+    // Pauses/stops the particle animation.
+    public pauseAnimation() {
+      if (!this.animationID) {
+        return;
+      }
+
+      cancelAnimationFrame(this.animationID);
+      this.animationID = null;
+    }
+
+    // Restarts the particles animation by calling animate.
+    public resumeAnimation() {
+      if (!this.animationID) {
+        this.animate();
+      }
+    }
+
     // Setup the canvas element.
     private initializeCanvas() {
       if (!this.options.selector) {

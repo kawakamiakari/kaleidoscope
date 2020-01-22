@@ -309,6 +309,20 @@ var Kaleidoscope = (function () {
             window.removeEventListener('resize', this.listenerResize);
             cancelAnimationFrame(this.animationID);
         };
+        // Pauses/stops the particle animation.
+        Plugin.prototype.pauseAnimation = function () {
+            if (!this.animationID) {
+                return;
+            }
+            cancelAnimationFrame(this.animationID);
+            this.animationID = null;
+        };
+        // Restarts the particles animation by calling animate.
+        Plugin.prototype.resumeAnimation = function () {
+            if (!this.animationID) {
+                this.animate();
+            }
+        };
         // Setup the canvas element.
         Plugin.prototype.initializeCanvas = function () {
             if (!this.options.selector) {
