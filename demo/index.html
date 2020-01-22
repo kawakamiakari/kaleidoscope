@@ -7,13 +7,12 @@
       window.exports = { __esModule: true };
     </script>
   </head>
-  <body>
+  <body style="margin: 0;">
     <canvas class="background"></canvas>
     <script src="../dist/kaleidoscope.js"></script>
     <script>
       window.onload = function() {
-        let kaleidoscope = new Kaleidoscope();
-        kaleidoscope.greet();
+        let kaleidoscope = new Kaleidoscope({ selector: '.background' });
         console.log(kaleidoscope);
       };
     </script>
