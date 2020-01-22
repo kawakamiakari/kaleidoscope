@@ -43,33 +43,11 @@ var Kaleidoscope = (function () {
             this.inclinationOB = 0;
             this.interceptOB = 0;
             this.inclinationAB = 0;
+            this.interceptAB = 0;
             this.context = context;
             this.options = options;
             this.radianAOB = (2 * Math.PI) / options.edge;
-            var canvas = document.querySelector(options.selector);
-            this.pointO.x = canvas.offsetParent
-                ? canvas.offsetParent.clientWidth / 2
-                : canvas.clientWidth / 2;
-            if (canvas.offsetParent && canvas.offsetParent.nodeName === 'BODY') {
-                this.pointO.y = window.innerHeight / 2;
-            }
-            else {
-                this.pointO.y = canvas.offsetParent
-                    ? canvas.offsetParent.clientHeight / 2
-                    : canvas.clientHeight / 2;
-            }
-            var radius = Math.sqrt(Math.pow(this.pointO.x, 2) + Math.pow(this.pointO.y, 2)) /
-                Math.tan(this.radianAOB / 2);
-            this.pointA = { x: this.pointO.x - radius, y: this.pointO.y - radius };
-            this.pointB = rotate(this.pointA.x, this.pointA.y, this.pointO.x, this.pointO.y, this.radianAOB);
-            var pointO = this.pointO;
-            var pointA = this.pointA;
-            var pointB = this.pointB;
-            this.isSharp = pointB.x < this.pointO.x;
-            this.inclinationOA = (pointA.y - pointO.y) / (pointA.x - pointO.x);
-            this.inclinationOB = (pointB.y - pointO.y) / (pointB.x - pointO.x);
-            this.interceptOB = pointO.y - this.inclinationOB * pointO.x;
-            this.inclinationAB = (pointB.y - pointA.y) / (pointB.x - pointA.x);
+            this.calculateBorder();
             this.initializeEvents();
         }
         // Get the center point of the kaleidoscope.
@@ -83,11 +61,11 @@ var Kaleidoscope = (function () {
             var maxY;
             var y;
             if (this.isSharp) {
-                minY = Math.max(this.inclinationOB * x + this.interceptOB, this.inclinationAB * x);
+                minY = Math.max(this.inclinationOB * x + this.interceptOB, this.inclinationAB * x + this.interceptAB);
                 maxY = this.inclinationOA * x;
             }
             else {
-                minY = this.inclinationAB * x;
+                minY = this.inclinationAB * x + this.interceptAB;
                 maxY = Math.min(this.inclinationOA * x, this.inclinationOB * x + this.interceptOB);
             }
             y = getRandomInt(maxY - minY) + minY;
@@ -100,14 +78,14 @@ var Kaleidoscope = (function () {
             var y = particle.y;
             var size = particle.size * 2; // Oversized
             if (this.isSharp) {
-                var minY = Math.max(this.inclinationOB * x + this.interceptOB, this.inclinationAB * x);
+                var minY = Math.max(this.inclinationOB * x + this.interceptOB, this.inclinationAB * x + this.interceptAB);
                 var maxY = this.inclinationOA * x;
                 if (y - size > maxY || y + size < minY) {
                     retval = false;
                 }
             }
             else {
-                var minY = this.inclinationAB * x;
+                var minY = this.inclinationAB * x + this.interceptAB;
                 var maxY = Math.min(this.inclinationOA * x, this.inclinationOB * x + this.interceptOB);
                 if (y - size > maxY || y + size < minY) {
                     retval = false;
@@ -131,6 +109,10 @@ var Kaleidoscope = (function () {
             drawFunc();
             context.restore();
         };
+        // Kick off various things on window resize.
+        Pipe.prototype.resize = function () {
+            this.calculateBorder();
+        };
         // Register event listeners.
         Pipe.prototype.initializeEvents = function () {
             var _this = this;
@@ -144,6 +126,33 @@ var Kaleidoscope = (function () {
                 _this.directionY = (event.clientY - _this.pointO.y) / unit;
                 element.dispatchEvent(new Event('change:direction'));
             });
+        };
+        Pipe.prototype.calculateBorder = function () {
+            var canvas = document.querySelector(this.options.selector);
+            this.pointO.x = canvas.offsetParent
+                ? canvas.offsetParent.clientWidth / 2
+                : canvas.clientWidth / 2;
+            if (canvas.offsetParent && canvas.offsetParent.nodeName === 'BODY') {
+                this.pointO.y = window.innerHeight / 2;
+            }
+            else {
+                this.pointO.y = canvas.offsetParent
+                    ? canvas.offsetParent.clientHeight / 2
+                    : canvas.clientHeight / 2;
+            }
+            var radius = Math.sqrt(Math.pow(this.pointO.x, 2) + Math.pow(this.pointO.y, 2)) /
+                Math.tan(this.radianAOB / 2);
+            this.pointA = { x: this.pointO.x - radius, y: this.pointO.y - radius };
+            this.pointB = rotate(this.pointA.x, this.pointA.y, this.pointO.x, this.pointO.y, this.radianAOB);
+            var pointO = this.pointO;
+            var pointA = this.pointA;
+            var pointB = this.pointB;
+            this.isSharp = pointB.x < this.pointO.x;
+            this.inclinationOA = (pointA.y - pointO.y) / (pointA.x - pointO.x);
+            this.inclinationOB = (pointB.y - pointO.y) / (pointB.x - pointO.x);
+            this.interceptOB = pointO.y - this.inclinationOB * pointO.x;
+            this.inclinationAB = (pointB.y - pointA.y) / (pointB.x - pointA.x);
+            this.interceptAB = pointA.y - this.inclinationAB * pointA.x;
         };
         return Pipe;
     }());
@@ -293,6 +302,13 @@ var Kaleidoscope = (function () {
             this.animate();
             return this;
         }
+        // destroy the plugin.
+        Plugin.prototype.destroy = function () {
+            this.storage = [];
+            this.element.remove();
+            window.removeEventListener('resize', this.listenerResize);
+            cancelAnimationFrame(this.animationID);
+        };
         // Setup the canvas element.
         Plugin.prototype.initializeCanvas = function () {
             if (!this.options.selector) {
@@ -302,24 +318,18 @@ var Kaleidoscope = (function () {
             }
             this.element = document.querySelector(this.options.selector);
             this.context = this.element.getContext('2d');
-            this.element.width = this.element.offsetParent
-                ? this.element.offsetParent.clientWidth
-                : this.element.clientWidth;
-            if (this.element.offsetParent &&
-                this.element.offsetParent.nodeName === 'BODY') {
-                this.element.height = window.innerHeight;
-            }
-            else {
-                this.element.height = this.element.offsetParent
-                    ? this.element.offsetParent.clientHeight
-                    : this.element.clientHeight;
-            }
             this.element.style.width = '100%';
             this.element.style.height = '100%';
+            this.resize();
         };
         // Register event listeners.
         Plugin.prototype.initializeEvents = function () {
-            // TODO: for resize.
+            var _this = this;
+            this.listenerResize = function () {
+                _this.resize();
+                _this.pipe.resize();
+            };
+            window.addEventListener('resize', this.listenerResize);
         };
         // Initialize the pipe.
         Plugin.prototype.initializePipe = function () {
@@ -357,6 +367,21 @@ var Kaleidoscope = (function () {
                 this.pipe.mirror(i, function () {
                     _this.storage.forEach(function (particle) { return particle.draw(); });
                 });
+            }
+        };
+        // Kick off various things on window resize.
+        Plugin.prototype.resize = function () {
+            this.element.width = this.element.offsetParent
+                ? this.element.offsetParent.clientWidth
+                : this.element.clientWidth;
+            if (this.element.offsetParent &&
+                this.element.offsetParent.nodeName === 'BODY') {
+                this.element.height = window.innerHeight;
+            }
+            else {
+                this.element.height = this.element.offsetParent
+                    ? this.element.offsetParent.clientHeight
+                    : this.element.clientHeight;
             }
         };
         return Plugin;
