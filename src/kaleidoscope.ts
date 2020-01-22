@@ -40,6 +40,9 @@ function rotate(
   return { x: X, y: Y };
 }
 class Pipe {
+  public directionX: number = 0;
+  public directionY: number = 0;
+
   private options: IOptions = null;
   private context: CanvasRenderingContext2D = null;
 
@@ -92,6 +95,8 @@ class Pipe {
     this.inclinationOB = (pointB.y - pointO.y) / (pointB.x - pointO.x);
     this.interceptOB = pointO.y - this.inclinationOB * pointO.x;
     this.inclinationAB = (pointB.y - pointA.y) / (pointB.x - pointA.x);
+
+    this.initializeEvents();
   }
 
   // Get the center point of the kaleidoscope.
@@ -175,6 +180,23 @@ class Pipe {
 
     context.restore();
   }
+
+  // Register event listeners.
+  private initializeEvents() {
+    const element = document.querySelector(this.options.selector);
+    element.addEventListener('mousemove', (event: MouseEvent) => {
+      const unit = Math.sqrt(
+        (event.clientX - this.pointO.x) ** 2 +
+          (event.clientY - this.pointO.y) ** 2,
+      );
+      if (unit === 0) return;
+
+      this.directionX = (event.clientX - this.pointO.x) / unit;
+      this.directionY = (event.clientY - this.pointO.y) / unit;
+
+      element.dispatchEvent(new Event('change:direction'));
+    });
+  }
 }
 class Particle {
   public size: number = 0;
@@ -210,6 +232,8 @@ class Particle {
     this.x = p.x;
     this.y = p.y;
     this.v = (Math.random() + 0.5) * options.speed;
+    this.directionX = pipe.directionX;
+    this.directionY = pipe.directionY;
 
     this.initializeEvents();
 
@@ -313,15 +337,9 @@ class Particle {
   // Register event listeners.
   private initializeEvents() {
     const element = document.querySelector(this.options.selector);
-    element.addEventListener('mousemove', (event: MouseEvent) => {
-      const pointO = this.pipe.getPointO();
-      const unit = Math.sqrt(
-        (event.clientX - pointO.x) ** 2 + (event.clientY - pointO.y) ** 2,
-      );
-      if (unit === 0) return;
-
-      this.directionX = (event.clientX - pointO.x) / unit;
-      this.directionY = (event.clientY - pointO.y) / unit;
+    element.addEventListener('change:direction', () => {
+      this.directionX = this.pipe.directionX;
+      this.directionY = this.pipe.directionY;
     });
   }
 }

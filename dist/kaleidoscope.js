@@ -29,6 +29,8 @@ function rotate(x, y, centerX, centerY, rad) {
 }
 var Pipe = /** @class */ (function () {
     function Pipe(context, options) {
+        this.directionX = 0;
+        this.directionY = 0;
         this.options = null;
         this.context = null;
         this.radianAOB = 0;
@@ -67,6 +69,7 @@ var Pipe = /** @class */ (function () {
         this.inclinationOB = (pointB.y - pointO.y) / (pointB.x - pointO.x);
         this.interceptOB = pointO.y - this.inclinationOB * pointO.x;
         this.inclinationAB = (pointB.y - pointA.y) / (pointB.x - pointA.x);
+        this.initializeEvents();
     }
     // Get the center point of the kaleidoscope.
     Pipe.prototype.getPointO = function () {
@@ -127,6 +130,20 @@ var Pipe = /** @class */ (function () {
         drawFunc();
         context.restore();
     };
+    // Register event listeners.
+    Pipe.prototype.initializeEvents = function () {
+        var _this = this;
+        var element = document.querySelector(this.options.selector);
+        element.addEventListener('mousemove', function (event) {
+            var unit = Math.sqrt(Math.pow((event.clientX - _this.pointO.x), 2) +
+                Math.pow((event.clientY - _this.pointO.y), 2));
+            if (unit === 0)
+                return;
+            _this.directionX = (event.clientX - _this.pointO.x) / unit;
+            _this.directionY = (event.clientY - _this.pointO.y) / unit;
+            element.dispatchEvent(new Event('change:direction'));
+        });
+    };
     return Pipe;
 }());
 var Particle = /** @class */ (function () {
@@ -155,6 +172,8 @@ var Particle = /** @class */ (function () {
         this.x = p.x;
         this.y = p.y;
         this.v = (Math.random() + 0.5) * options.speed;
+        this.directionX = pipe.directionX;
+        this.directionY = pipe.directionY;
         this.initializeEvents();
         return this;
     }
@@ -238,13 +257,9 @@ var Particle = /** @class */ (function () {
     Particle.prototype.initializeEvents = function () {
         var _this = this;
         var element = document.querySelector(this.options.selector);
-        element.addEventListener('mousemove', function (event) {
-            var pointO = _this.pipe.getPointO();
-            var unit = Math.sqrt(Math.pow((event.clientX - pointO.x), 2) + Math.pow((event.clientY - pointO.y), 2));
-            if (unit === 0)
-                return;
-            _this.directionX = (event.clientX - pointO.x) / unit;
-            _this.directionY = (event.clientY - pointO.y) / unit;
+        element.addEventListener('change:direction', function () {
+            _this.directionX = _this.pipe.directionX;
+            _this.directionY = _this.pipe.directionY;
         });
     };
     return Particle;
