@@ -118,14 +118,14 @@ var Kaleidoscope = (function () {
         // Register event listeners.
         Pipe.prototype.initializeEvents = function () {
             var _this = this;
-            var element = document.querySelector(this.options.selector);
-            element.addEventListener('mousemove', function (event) {
+            window.addEventListener('mousemove', function (event) {
                 var unit = Math.sqrt(Math.pow((event.clientX - _this.pointO.x), 2) +
                     Math.pow((event.clientY - _this.pointO.y), 2));
                 if (unit === 0)
                     return;
                 _this.directionX = (event.clientX - _this.pointO.x) / unit;
                 _this.directionY = (event.clientY - _this.pointO.y) / unit;
+                var element = document.querySelector(_this.options.selector);
                 element.dispatchEvent(new Event('change:direction'));
             });
         };
@@ -406,7 +406,7 @@ var Kaleidoscope = (function () {
         };
         return Plugin;
     }());
-    return Plugin;
+    return function (options) { return new Plugin(options); };
 })();
 (function () {
     if (typeof module !== 'undefined' && module.exports) {

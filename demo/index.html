@@ -1,20 +1,80 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>Kaleidoscope</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Titillium+Web&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="style.css" />
     <script>
       window.exports = { __esModule: true };
     </script>
   </head>
-  <body style="margin: 0;">
-    <canvas class="background"></canvas>
-    <script src="../dist/kaleidoscope.js"></script>
+  <body class="default">
+    <div id="background">
+      <canvas id="kaleidoscope"></canvas>
+    </div>
+
+    <div class="contents">
+      <div class="inner">
+        <h1 class="title">Kaleidoscope</h1>
+        <p class="description">
+          A lightweight JavaScript plugin for particle backgrounds.
+        </p>
+        <p>
+          <a class="button change-bg def" onclick="showValentine()">
+            <img class="icon" src="icons/trip_origin-24px.svg" alt="" />
+          </a>
+          <a class="button change-bg val" onclick="showValentine()">
+            <img class="icon" src="icons/favorite-24px.svg" alt="" />
+          </a>
+          <a class="button change-bg val" onclick="showValentine()">❤️</a>
+          <a class="button change-bg val" onclick="showValentine()">❤️</a>
+          <a class="button change-bg val" onclick="showValentine()">❤️</a>
+        </p>
+        <p>
+          <a
+            class="button link"
+            href="https://github.com/kawakamiakari/kaleidoscope"
+          >
+            <img class="icon" src="icons/GitHub-Mark-120px-plus.png" alt="" />
+            GitHub
+          </a>
+          <a
+            class="button link"
+            href="https://github.com/kawakamiakari/kaleidoscope/archive/master.zip"
+            download
+          >
+            <img class="icon" src="icons/cloud_download-24px.svg" alt="" />
+            Download
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <script src="../dist/kaleidoscope.min.js"></script>
     <script>
+      let kaleidoscope;
       window.onload = function() {
-        let kaleidoscope = new Kaleidoscope({ selector: '.background' });
-        console.log(kaleidoscope);
+        kaleidoscope = new Kaleidoscope({
+          selector: '#kaleidoscope',
+        });
       };
+
+      function showValentine() {
+        kaleidoscope.destroy();
+
+        let background = document.querySelector('#background');
+        let canvas = document.createElement('canvas');
+        canvas.id = 'kaleidoscope';
+        background.appendChild(canvas);
+
+        kaleidoscope = new Kaleidoscope({
+          selector: '#kaleidoscope',
+        });
+      }
     </script>
   </body>
 </html>
