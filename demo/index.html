@@ -24,7 +24,7 @@
           A lightweight JavaScript plugin for particle backgrounds.
         </p>
         <p>
-          <a class="button change-bg def" onclick="showValentine()">
+          <a class="button change-bg def" onclick="showDefault()">
             <img class="icon" src="icons/trip_origin-24px.svg" alt="" />
           </a>
           <a class="button change-bg val" onclick="showValentine()">
@@ -63,9 +63,11 @@
         });
       };
 
-      function showValentine() {
+      function showDefault() {
         kaleidoscope.destroy();
 
+        let body = document.getElementsByTagName('body')[0];
+        body.setAttribute('class', 'default');
         let background = document.querySelector('#background');
         let canvas = document.createElement('canvas');
         canvas.id = 'kaleidoscope';
@@ -73,6 +75,29 @@
 
         kaleidoscope = new Kaleidoscope({
           selector: '#kaleidoscope',
+        });
+      }
+
+      function showValentine() {
+        kaleidoscope.destroy();
+
+        let body = document.getElementsByTagName('body')[0];
+        body.setAttribute('class', 'valentine');
+        let background = document.querySelector('#background');
+        let canvas = document.createElement('canvas');
+        canvas.id = 'kaleidoscope';
+        background.appendChild(canvas);
+
+        kaleidoscope = new Kaleidoscope({
+          selector: '#kaleidoscope',
+          edge: 6,
+          shapes: ['heart', 'square'],
+          minSize: 80,
+          maxSize: 90,
+          color: ['#C38D94', '#DEDBD2', '#EDBFC6', '#5F4842'],
+          globalCompositeOperation: 'screen',
+          quantity: 30,
+          speed: 0.2,
         });
       }
     </script>

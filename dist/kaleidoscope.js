@@ -248,6 +248,27 @@ var Kaleidoscope = (function () {
                     context.fill();
                     context.restore();
                     break;
+                case 'heart':
+                    context.save();
+                    // Settings
+                    context.fillStyle = this.color;
+                    context.globalAlpha = this.opacity;
+                    // Rotate
+                    context.translate(this.x + this.size / 2, this.y + this.size / 2);
+                    context.rotate(this.radian);
+                    context.translate(-(this.x + this.size / 2), -(this.y + this.size / 2));
+                    // Draw
+                    context.beginPath();
+                    context.moveTo(this.x + (this.size * 75) / 130, this.y + (this.size * 40) / 140);
+                    context.bezierCurveTo(this.x + (this.size * 75) / 130, this.y + (this.size * 37) / 140, this.x + (this.size * 70) / 130, this.y + (this.size * 25) / 140, this.x + (this.size * 50) / 130, this.y + (this.size * 25) / 140);
+                    context.bezierCurveTo(this.x + (this.size * 20) / 130, this.y + (this.size * 25) / 140, this.x + (this.size * 20) / 130, this.y + (this.size * 62.5) / 140, this.x + (this.size * 20) / 130, this.y + (this.size * 62.5) / 140);
+                    context.bezierCurveTo(this.x + (this.size * 20) / 130, this.y + (this.size * 80) / 140, this.x + (this.size * 40) / 130, this.y + (this.size * 102) / 140, this.x + (this.size * 75) / 130, this.y + (this.size * 120) / 140);
+                    context.bezierCurveTo(this.x + (this.size * 110) / 130, this.y + (this.size * 102) / 140, this.x + (this.size * 130) / 130, this.y + (this.size * 80) / 140, this.x + (this.size * 130) / 130, this.y + (this.size * 62.5) / 140);
+                    context.bezierCurveTo(this.x + (this.size * 130) / 130, this.y + (this.size * 62.5) / 140, this.x + (this.size * 130) / 130, this.y + (this.size * 25) / 140, this.x + (this.size * 100) / 130, this.y + (this.size * 25) / 140);
+                    context.bezierCurveTo(this.x + (this.size * 85) / 130, this.y + (this.size * 25) / 140, this.x + (this.size * 75) / 130, this.y + (this.size * 37) / 140, this.x + (this.size * 75) / 130, this.y + (this.size * 40) / 140);
+                    context.fill();
+                    context.restore();
+                    break;
                 default:
                     break;
             }

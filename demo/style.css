@@ -5,10 +5,6 @@ body {
     'ＭＳ ゴシック', sans-serif;
 }
 
-body * {
-  transition: 0.25s;
-}
-
 #background {
   display: block;
   position: absolute;
@@ -50,6 +46,7 @@ body * {
 
 .button {
   border: #000 solid 1px;
+  transition: 0.25s;
 }
 
 .button.change-bg {
@@ -65,6 +62,8 @@ body * {
 }
 
 .button.change-bg .icon {
+  width: 24px;
+  height: 24px;
   vertical-align: middle;
 }
 
@@ -76,7 +75,11 @@ body * {
   background: #2e86ab;
 }
 .button.change-bg.val {
-  background: pink;
+  background: #f7e1d7;
+}
+.button.change-bg.val:hover,
+.button.change-bg.val:active {
+  background: #c38d94;
 }
 
 .button.link {
@@ -99,6 +102,7 @@ body * {
 
 body.default {
   color: #000;
+  background: #fff;
 }
 body.default .title {
   text-shadow: 2px 2px 0 #fff, -2px 2px 0 #fff, 2px -2px 0 #fff,
@@ -118,4 +122,28 @@ body.default .button.link:hover,
 body.default .button.link:active {
   color: #fff;
   background: #000;
+}
+
+body.valentine {
+  color: #5f4842;
+  background: #f7e1d7;
+}
+body.valentine .title {
+  text-shadow: 2px 2px 0 #f7e1d7, -2px 2px 0 #f7e1d7, 2px -2px 0 #f7e1d7,
+    -2px -2px 0 #f7e1d7;
+}
+body.valentine .description {
+  text-shadow: 1px 1px 0 #f7e1d7, -1px 1px 0 #f7e1d7, 1px -1px 0 #f7e1d7,
+    -1px -1px 0 #f7e1d7;
+}
+body.valentine .button {
+  border-color: #5f4842;
+}
+body.valentine .button.link {
+  color: #5f4842;
+}
+body.valentine .button.link:hover,
+body.valentine .button.link:active {
+  color: #f7e1d7;
+  background: #5f4842;
 }
