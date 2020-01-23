@@ -54,6 +54,7 @@ const Kaleidoscope = (() => {
 
     private isSharp: boolean = null;
     private inclinationOA: number = 0;
+    private interceptOA: number = 0;
     private inclinationOB: number = 0;
     private interceptOB: number = 0;
     private inclinationAB: number = 0;
@@ -76,7 +77,9 @@ const Kaleidoscope = (() => {
 
     // Get the random point in the pipe.
     public getRandomCoordinates() {
-      const x = getRandomInt(Math.max(this.pointO.x, this.pointB.x));
+      const x =
+        getRandomInt(Math.max(this.pointO.x, this.pointB.x) - this.pointA.x) +
+        this.pointA.x;
 
       let minY;
       let maxY;
@@ -86,11 +89,11 @@ const Kaleidoscope = (() => {
           this.inclinationOB * x + this.interceptOB,
           this.inclinationAB * x + this.interceptAB,
         );
-        maxY = this.inclinationOA * x;
+        maxY = this.inclinationOA * x + this.interceptOA;
       } else {
         minY = this.inclinationAB * x + this.interceptAB;
         maxY = Math.min(
-          this.inclinationOA * x,
+          this.inclinationOA * x + this.interceptOA,
           this.inclinationOB * x + this.interceptOB,
         );
       }
@@ -111,14 +114,14 @@ const Kaleidoscope = (() => {
           this.inclinationOB * x + this.interceptOB,
           this.inclinationAB * x + this.interceptAB,
         );
-        const maxY = this.inclinationOA * x;
+        const maxY = this.inclinationOA * x + this.interceptOA;
         if (y - size > maxY || y + size < minY) {
           retval = false;
         }
       } else {
         const minY = this.inclinationAB * x + this.interceptAB;
         const maxY = Math.min(
-          this.inclinationOA * x,
+          this.inclinationOA * x + this.interceptOA,
           this.inclinationOB * x + this.interceptOB,
         );
         if (y - size > maxY || y + size < minY) {
@@ -187,10 +190,12 @@ const Kaleidoscope = (() => {
           ? canvas.offsetParent.clientHeight / 2
           : canvas.clientHeight / 2;
       }
-      const radius =
-        Math.sqrt(this.pointO.x ** 2 + this.pointO.y ** 2) /
-        Math.tan(this.radianAOB / 2);
-      this.pointA = { x: this.pointO.x - radius, y: this.pointO.y - radius };
+      const diagonal = Math.sqrt(this.pointO.x ** 2 + this.pointO.y ** 2);
+      const radius = diagonal / Math.cos(this.radianAOB / 2);
+      this.pointA = {
+        x: (1 - radius / diagonal) * this.pointO.x,
+        y: (1 - radius / diagonal) * this.pointO.y,
+      };
       this.pointB = rotate(
         this.pointA.x,
         this.pointA.y,
@@ -205,6 +210,7 @@ const Kaleidoscope = (() => {
 
       this.isSharp = pointB.x < this.pointO.x;
       this.inclinationOA = (pointA.y - pointO.y) / (pointA.x - pointO.x);
+      this.interceptOA = pointO.y - this.inclinationOA * pointO.x;
       this.inclinationOB = (pointB.y - pointO.y) / (pointB.x - pointO.x);
       this.interceptOB = pointO.y - this.inclinationOB * pointO.x;
       this.inclinationAB = (pointB.y - pointA.y) / (pointB.x - pointA.x);
@@ -363,11 +369,11 @@ const Kaleidoscope = (() => {
     private options: IOptions = null;
     private defaults: IOptions = {
       color: ['#FFD1B9', '#564138', '#2E86AB', '#F5F749', '#F24236'],
-      edge: 7,
+      edge: 10,
       globalCompositeOperation: 'overlay',
-      maxSize: 40,
-      minSize: 20,
-      quantity: 60,
+      maxSize: 50,
+      minSize: 30,
+      quantity: 50,
       selector: null,
       shapes: ['square', 'circle', 'wave'],
       speed: 0.3,

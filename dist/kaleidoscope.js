@@ -40,6 +40,7 @@ var Kaleidoscope = (function () {
             this.pointB = { x: 0, y: 0 };
             this.isSharp = null;
             this.inclinationOA = 0;
+            this.interceptOA = 0;
             this.inclinationOB = 0;
             this.interceptOB = 0;
             this.inclinationAB = 0;
@@ -56,17 +57,18 @@ var Kaleidoscope = (function () {
         };
         // Get the random point in the pipe.
         Pipe.prototype.getRandomCoordinates = function () {
-            var x = getRandomInt(Math.max(this.pointO.x, this.pointB.x));
+            var x = getRandomInt(Math.max(this.pointO.x, this.pointB.x) - this.pointA.x) +
+                this.pointA.x;
             var minY;
             var maxY;
             var y;
             if (this.isSharp) {
                 minY = Math.max(this.inclinationOB * x + this.interceptOB, this.inclinationAB * x + this.interceptAB);
-                maxY = this.inclinationOA * x;
+                maxY = this.inclinationOA * x + this.interceptOA;
             }
             else {
                 minY = this.inclinationAB * x + this.interceptAB;
-                maxY = Math.min(this.inclinationOA * x, this.inclinationOB * x + this.interceptOB);
+                maxY = Math.min(this.inclinationOA * x + this.interceptOA, this.inclinationOB * x + this.interceptOB);
             }
             y = getRandomInt(maxY - minY) + minY;
             return { x: x, y: y };
@@ -79,14 +81,14 @@ var Kaleidoscope = (function () {
             var size = particle.size * 2; // Oversized
             if (this.isSharp) {
                 var minY = Math.max(this.inclinationOB * x + this.interceptOB, this.inclinationAB * x + this.interceptAB);
-                var maxY = this.inclinationOA * x;
+                var maxY = this.inclinationOA * x + this.interceptOA;
                 if (y - size > maxY || y + size < minY) {
                     retval = false;
                 }
             }
             else {
                 var minY = this.inclinationAB * x + this.interceptAB;
-                var maxY = Math.min(this.inclinationOA * x, this.inclinationOB * x + this.interceptOB);
+                var maxY = Math.min(this.inclinationOA * x + this.interceptOA, this.inclinationOB * x + this.interceptOB);
                 if (y - size > maxY || y + size < minY) {
                     retval = false;
                 }
@@ -140,15 +142,19 @@ var Kaleidoscope = (function () {
                     ? canvas.offsetParent.clientHeight / 2
                     : canvas.clientHeight / 2;
             }
-            var radius = Math.sqrt(Math.pow(this.pointO.x, 2) + Math.pow(this.pointO.y, 2)) /
-                Math.tan(this.radianAOB / 2);
-            this.pointA = { x: this.pointO.x - radius, y: this.pointO.y - radius };
+            var diagonal = Math.sqrt(Math.pow(this.pointO.x, 2) + Math.pow(this.pointO.y, 2));
+            var radius = diagonal / Math.cos(this.radianAOB / 2);
+            this.pointA = {
+                x: (1 - radius / diagonal) * this.pointO.x,
+                y: (1 - radius / diagonal) * this.pointO.y
+            };
             this.pointB = rotate(this.pointA.x, this.pointA.y, this.pointO.x, this.pointO.y, this.radianAOB);
             var pointO = this.pointO;
             var pointA = this.pointA;
             var pointB = this.pointB;
             this.isSharp = pointB.x < this.pointO.x;
             this.inclinationOA = (pointA.y - pointO.y) / (pointA.x - pointO.x);
+            this.interceptOA = pointO.y - this.inclinationOA * pointO.x;
             this.inclinationOB = (pointB.y - pointO.y) / (pointB.x - pointO.x);
             this.interceptOB = pointO.y - this.inclinationOB * pointO.x;
             this.inclinationAB = (pointB.y - pointA.y) / (pointB.x - pointA.x);
@@ -280,11 +286,11 @@ var Kaleidoscope = (function () {
             this.options = null;
             this.defaults = {
                 color: ['#FFD1B9', '#564138', '#2E86AB', '#F5F749', '#F24236'],
-                edge: 7,
+                edge: 10,
                 globalCompositeOperation: 'overlay',
-                maxSize: 40,
-                minSize: 20,
-                quantity: 60,
+                maxSize: 50,
+                minSize: 30,
+                quantity: 50,
                 selector: null,
                 shapes: ['square', 'circle', 'wave'],
                 speed: 0.3
