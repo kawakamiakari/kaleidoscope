@@ -161,8 +161,7 @@ const Kaleidoscope = (() => {
 
     // Register event listeners.
     private initializeEvents() {
-      const element = document.querySelector(this.options.selector);
-      element.addEventListener('mousemove', (event: MouseEvent) => {
+      window.addEventListener('mousemove', (event: MouseEvent) => {
         const unit = Math.sqrt(
           (event.clientX - this.pointO.x) ** 2 +
             (event.clientY - this.pointO.y) ** 2,
@@ -172,6 +171,7 @@ const Kaleidoscope = (() => {
         this.directionX = (event.clientX - this.pointO.x) / unit;
         this.directionY = (event.clientY - this.pointO.y) / unit;
 
+        const element = document.querySelector(this.options.selector);
         element.dispatchEvent(new Event('change:direction'));
       });
     }
@@ -517,7 +517,7 @@ const Kaleidoscope = (() => {
     }
   }
 
-  return Plugin;
+  return (options: IOptions) => new Plugin(options);
 })();
 
 interface IWindow extends Window {
