@@ -111,6 +111,10 @@ var Kaleidoscope = (function () {
             drawFunc();
             context.restore();
         };
+        // destroy the object.
+        Pipe.prototype.destroy = function () {
+            window.removeEventListener('mousemove', this.listenerMousemove);
+        };
         // Kick off various things on window resize.
         Pipe.prototype.resize = function () {
             this.calculateBorder();
@@ -118,7 +122,7 @@ var Kaleidoscope = (function () {
         // Register event listeners.
         Pipe.prototype.initializeEvents = function () {
             var _this = this;
-            window.addEventListener('mousemove', function (event) {
+            this.listenerMousemove = function (event) {
                 var unit = Math.sqrt(Math.pow((event.clientX - _this.pointO.x), 2) +
                     Math.pow((event.clientY - _this.pointO.y), 2));
                 if (unit === 0)
@@ -127,7 +131,8 @@ var Kaleidoscope = (function () {
                 _this.directionY = (event.clientY - _this.pointO.y) / unit;
                 var element = document.querySelector(_this.options.selector);
                 element.dispatchEvent(new Event('change:direction'));
-            });
+            };
+            window.addEventListener('mousemove', this.listenerMousemove);
         };
         Pipe.prototype.calculateBorder = function () {
             var canvas = document.querySelector(this.options.selector);
@@ -263,9 +268,29 @@ var Kaleidoscope = (function () {
                     context.bezierCurveTo(this.x + (this.size * 75) / 130, this.y + (this.size * 37) / 140, this.x + (this.size * 70) / 130, this.y + (this.size * 25) / 140, this.x + (this.size * 50) / 130, this.y + (this.size * 25) / 140);
                     context.bezierCurveTo(this.x + (this.size * 20) / 130, this.y + (this.size * 25) / 140, this.x + (this.size * 20) / 130, this.y + (this.size * 62.5) / 140, this.x + (this.size * 20) / 130, this.y + (this.size * 62.5) / 140);
                     context.bezierCurveTo(this.x + (this.size * 20) / 130, this.y + (this.size * 80) / 140, this.x + (this.size * 40) / 130, this.y + (this.size * 102) / 140, this.x + (this.size * 75) / 130, this.y + (this.size * 120) / 140);
-                    context.bezierCurveTo(this.x + (this.size * 110) / 130, this.y + (this.size * 102) / 140, this.x + (this.size * 130) / 130, this.y + (this.size * 80) / 140, this.x + (this.size * 130) / 130, this.y + (this.size * 62.5) / 140);
-                    context.bezierCurveTo(this.x + (this.size * 130) / 130, this.y + (this.size * 62.5) / 140, this.x + (this.size * 130) / 130, this.y + (this.size * 25) / 140, this.x + (this.size * 100) / 130, this.y + (this.size * 25) / 140);
+                    context.bezierCurveTo(this.x + (this.size * 110) / 130, this.y + (this.size * 102) / 140, this.x + this.size, this.y + (this.size * 80) / 140, this.x + this.size, this.y + (this.size * 62.5) / 140);
+                    context.bezierCurveTo(this.x + this.size, this.y + (this.size * 62.5) / 140, this.x + this.size, this.y + (this.size * 25) / 140, this.x + (this.size * 100) / 130, this.y + (this.size * 25) / 140);
                     context.bezierCurveTo(this.x + (this.size * 85) / 130, this.y + (this.size * 25) / 140, this.x + (this.size * 75) / 130, this.y + (this.size * 37) / 140, this.x + (this.size * 75) / 130, this.y + (this.size * 40) / 140);
+                    context.fill();
+                    context.restore();
+                    break;
+                case 'star':
+                    context.save();
+                    // Settings
+                    context.fillStyle = this.color;
+                    context.globalAlpha = this.opacity;
+                    // Rotate
+                    context.translate(this.x + this.size / 2, this.y + this.size * (9 / 10));
+                    context.rotate(this.radian);
+                    context.translate(-(this.x + this.size / 2), -(this.y + this.size * (9 / 10)));
+                    // Draw
+                    context.beginPath();
+                    context.moveTo(this.x, this.y + (this.size * 70) / 200);
+                    context.lineTo(this.x + this.size, this.y + (this.size * 70) / 200);
+                    context.lineTo(this.x + (this.size * 35) / 200, this.y + (this.size * 180) / 200);
+                    context.lineTo(this.x + (this.size * 100) / 200, this.y);
+                    context.lineTo(this.x + (this.size * 165) / 200, this.y + (this.size * 180) / 200);
+                    context.closePath();
                     context.fill();
                     context.restore();
                     break;
@@ -333,6 +358,7 @@ var Kaleidoscope = (function () {
         Plugin.prototype.destroy = function () {
             this.storage = [];
             this.element.remove();
+            this.pipe.destroy();
             window.removeEventListener('resize', this.listenerResize);
             cancelAnimationFrame(this.animationID);
         };

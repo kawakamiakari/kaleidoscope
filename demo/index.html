@@ -30,7 +30,9 @@
           <a class="button change-bg val" onclick="showValentine()">
             <img class="icon" src="icons/favorite-24px.svg" alt="" />
           </a>
-          <a class="button change-bg val" onclick="showValentine()">❤️</a>
+          <a class="button change-bg mid" onclick="showMidnight()">
+            <img class="icon" src="icons/star-24px.svg" alt="" />
+          </a>
           <a class="button change-bg val" onclick="showValentine()">❤️</a>
           <a class="button change-bg val" onclick="showValentine()">❤️</a>
         </p>
@@ -98,6 +100,29 @@
           globalCompositeOperation: 'screen',
           quantity: 30,
           speed: 0.2,
+        });
+      }
+
+      function showMidnight() {
+        kaleidoscope.destroy();
+
+        let body = document.getElementsByTagName('body')[0];
+        body.setAttribute('class', 'midnight');
+        let background = document.querySelector('#background');
+        let canvas = document.createElement('canvas');
+        canvas.id = 'kaleidoscope';
+        background.appendChild(canvas);
+
+        kaleidoscope = new Kaleidoscope({
+          selector: '#kaleidoscope',
+          edge: 5,
+          shapes: ['star', 'circle'],
+          minSize: 5,
+          maxSize: 40,
+          color: ['#001F54', '#034078', '#1282A2', '#F9F4E0'],
+          globalCompositeOperation: 'multiply',
+          quantity: 70,
+          speed: 0.1,
         });
       }
     </script>

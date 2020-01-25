@@ -60,6 +60,8 @@ const Kaleidoscope = (() => {
     private inclinationAB: number = 0;
     private interceptAB: number = 0;
 
+    private listenerMousemove: (this: Window, ev: UIEvent) => any;
+
     constructor(context: CanvasRenderingContext2D, options: IOptions) {
       this.context = context;
       this.options = options;
@@ -154,6 +156,11 @@ const Kaleidoscope = (() => {
       context.restore();
     }
 
+    // destroy the object.
+    public destroy() {
+      window.removeEventListener('mousemove', this.listenerMousemove);
+    }
+
     // Kick off various things on window resize.
     public resize() {
       this.calculateBorder();
@@ -161,7 +168,7 @@ const Kaleidoscope = (() => {
 
     // Register event listeners.
     private initializeEvents() {
-      window.addEventListener('mousemove', (event: MouseEvent) => {
+      this.listenerMousemove = (event: MouseEvent) => {
         const unit = Math.sqrt(
           (event.clientX - this.pointO.x) ** 2 +
             (event.clientY - this.pointO.y) ** 2,
@@ -173,7 +180,8 @@ const Kaleidoscope = (() => {
 
         const element = document.querySelector(this.options.selector);
         element.dispatchEvent(new Event('change:direction'));
-      });
+      };
+      window.addEventListener('mousemove', this.listenerMousemove);
     }
 
     private calculateBorder() {
@@ -379,15 +387,15 @@ const Kaleidoscope = (() => {
           context.bezierCurveTo(
             this.x + (this.size * 110) / 130,
             this.y + (this.size * 102) / 140,
-            this.x + (this.size * 130) / 130,
+            this.x + this.size,
             this.y + (this.size * 80) / 140,
-            this.x + (this.size * 130) / 130,
+            this.x + this.size,
             this.y + (this.size * 62.5) / 140,
           );
           context.bezierCurveTo(
-            this.x + (this.size * 130) / 130,
+            this.x + this.size,
             this.y + (this.size * 62.5) / 140,
-            this.x + (this.size * 130) / 130,
+            this.x + this.size,
             this.y + (this.size * 25) / 140,
             this.x + (this.size * 100) / 130,
             this.y + (this.size * 25) / 140,
@@ -400,6 +408,42 @@ const Kaleidoscope = (() => {
             this.x + (this.size * 75) / 130,
             this.y + (this.size * 40) / 140,
           );
+          context.fill();
+
+          context.restore();
+          break;
+        case 'star':
+          context.save();
+
+          // Settings
+          context.fillStyle = this.color;
+          context.globalAlpha = this.opacity;
+
+          // Rotate
+          context.translate(
+            this.x + this.size / 2,
+            this.y + this.size * (9 / 10),
+          );
+          context.rotate(this.radian);
+          context.translate(
+            -(this.x + this.size / 2),
+            -(this.y + this.size * (9 / 10)),
+          );
+
+          // Draw
+          context.beginPath();
+          context.moveTo(this.x, this.y + (this.size * 70) / 200);
+          context.lineTo(this.x + this.size, this.y + (this.size * 70) / 200);
+          context.lineTo(
+            this.x + (this.size * 35) / 200,
+            this.y + (this.size * 180) / 200,
+          );
+          context.lineTo(this.x + (this.size * 100) / 200, this.y);
+          context.lineTo(
+            this.x + (this.size * 165) / 200,
+            this.y + (this.size * 180) / 200,
+          );
+          context.closePath();
           context.fill();
 
           context.restore();
@@ -477,6 +521,7 @@ const Kaleidoscope = (() => {
     public destroy() {
       this.storage = [];
       this.element.remove();
+      this.pipe.destroy();
 
       window.removeEventListener('resize', this.listenerResize);
       cancelAnimationFrame(this.animationID);

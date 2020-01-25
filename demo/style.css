@@ -72,7 +72,7 @@ body {
 }
 .button.change-bg.def:hover,
 .button.change-bg.def:active {
-  background: #2e86ab;
+  background: #f5f749;
 }
 .button.change-bg.val {
   background: #f7e1d7;
@@ -80,6 +80,13 @@ body {
 .button.change-bg.val:hover,
 .button.change-bg.val:active {
   background: #c38d94;
+}
+.button.change-bg.mid {
+  background: #1282a2;
+}
+.button.change-bg.mid:hover,
+.button.change-bg.mid:active {
+  background: #034078;
 }
 
 .button.link {
@@ -146,4 +153,28 @@ body.valentine .button.link:hover,
 body.valentine .button.link:active {
   color: #f7e1d7;
   background: #5f4842;
+}
+
+body.midnight {
+  color: #fff;
+  background: #0a1128;
+}
+body.midnight .title {
+  text-shadow: 2px 2px 0 #0a1128, -2px 2px 0 #0a1128, 2px -2px 0 #0a1128,
+    -2px -2px 0 #0a1128;
+}
+body.midnight .description {
+  text-shadow: 1px 1px 0 #0a1128, -1px 1px 0 #0a1128, 1px -1px 0 #0a1128,
+    -1px -1px 0 #0a1128;
+}
+body.midnight .button {
+  border-color: #fff;
+}
+body.midnight .button.link {
+  color: #fff;
+}
+body.midnight .button.link:hover,
+body.midnight .button.link:active {
+  color: #0a1128;
+  background: #fff;
 }
