@@ -88,6 +88,13 @@ body {
 .button.change-bg.mid:active {
   background: #034078;
 }
+.button.change-bg.gar {
+  background: #72b7a6;
+}
+.button.change-bg.gar:hover,
+.button.change-bg.gar:active {
+  background: #347c81;
+}
 
 .button.link {
   display: inline-block;
@@ -153,6 +160,30 @@ body.valentine .button.link:hover,
 body.valentine .button.link:active {
   color: #f7e1d7;
   background: #5f4842;
+}
+
+body.garden {
+  color: #443650;
+  background: #72b7a6;
+}
+body.garden .title {
+  text-shadow: 2px 2px 0 #72b7a6, -2px 2px 0 #72b7a6, 2px -2px 0 #72b7a6,
+    -2px -2px 0 #72b7a6;
+}
+body.garden .description {
+  text-shadow: 1px 1px 0 #72b7a6, -1px 1px 0 #72b7a6, 1px -1px 0 #72b7a6,
+    -1px -1px 0 #72b7a6;
+}
+body.garden .button {
+  border-color: #443650;
+}
+body.garden .button.link {
+  color: #443650;
+}
+body.garden .button.link:hover,
+body.garden .button.link:active {
+  color: #72b7a6;
+  background: #443650;
 }
 
 body.midnight {

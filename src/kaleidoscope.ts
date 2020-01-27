@@ -448,6 +448,49 @@ const Kaleidoscope = (() => {
 
           context.restore();
           break;
+        case 'drop':
+          context.save();
+
+          // Settings
+          context.fillStyle = this.color;
+          context.globalAlpha = this.opacity;
+
+          // Rotate
+          context.translate(this.x + this.size / 3, this.y + this.size / 2);
+          context.rotate(this.radian);
+          context.translate(
+            -(this.x + this.size / 3),
+            -(this.y + this.size / 2),
+          );
+
+          // Draw
+          context.beginPath();
+          context.moveTo(this.x, this.y + this.size * (2 / 3));
+          context.quadraticCurveTo(
+            this.x,
+            this.y + this.size / 3,
+            this.x + this.size / 3,
+            this.y,
+          );
+          context.quadraticCurveTo(
+            this.x + this.size * (2 / 3),
+            this.y + this.size * (1 / 3),
+            this.x + this.size * (2 / 3),
+            this.y + this.size * (2 / 3),
+          );
+          context.arc(
+            this.x + this.size * (1 / 3),
+            this.y + this.size * (2 / 3),
+            this.size * (1 / 3),
+            0,
+            Math.PI,
+            false,
+          );
+          context.closePath();
+          context.fill();
+
+          context.restore();
+          break;
         default:
           break;
       }
