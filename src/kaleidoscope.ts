@@ -491,6 +491,27 @@ const Kaleidoscope = (() => {
 
           context.restore();
           break;
+        case 'oval':
+          context.save();
+
+          // Settings
+          context.fillStyle = this.color;
+          context.globalAlpha = this.opacity;
+
+          // Rotate
+          context.translate(this.x + this.size / 2, this.y + this.size / 2);
+          context.rotate(this.radian);
+          context.scale(1, 3 / 4);
+          context.translate(-(this.size / 2), -(this.size / 2));
+
+          // Draw
+          context.beginPath();
+          context.arc(0, 0, this.size / 2, 0, 2 * Math.PI, false);
+          context.closePath();
+          context.fill();
+
+          context.restore();
+          break;
         default:
           break;
       }
