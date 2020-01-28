@@ -12,7 +12,9 @@
       window.exports = { __esModule: true };
     </script>
   </head>
+
   <body class="default">
+    <!-- Kaleidoscope container. -->
     <div id="background">
       <canvas id="kaleidoscope"></canvas>
     </div>
@@ -60,22 +62,25 @@
       </div>
     </div>
 
+    <!-- Script. -->
     <script src="../dist/kaleidoscope.min.js"></script>
     <script>
-      let kaleidoscope;
+      // Default usage.
+      var kaleidoscope;
       window.onload = function() {
         kaleidoscope = new Kaleidoscope({
           selector: '#kaleidoscope',
         });
       };
 
+      // Optional usage.
       function showDefault() {
         kaleidoscope.destroy();
 
-        let body = document.getElementsByTagName('body')[0];
+        var body = document.getElementsByTagName('body')[0];
         body.setAttribute('class', 'default');
-        let background = document.querySelector('#background');
-        let canvas = document.createElement('canvas');
+        var background = document.querySelector('#background');
+        var canvas = document.createElement('canvas');
         canvas.id = 'kaleidoscope';
         background.appendChild(canvas);
 
@@ -87,10 +92,10 @@
       function showValentine() {
         kaleidoscope.destroy();
 
-        let body = document.getElementsByTagName('body')[0];
+        var body = document.getElementsByTagName('body')[0];
         body.setAttribute('class', 'valentine');
-        let background = document.querySelector('#background');
-        let canvas = document.createElement('canvas');
+        var background = document.querySelector('#background');
+        var canvas = document.createElement('canvas');
         canvas.id = 'kaleidoscope';
         background.appendChild(canvas);
 
@@ -110,10 +115,10 @@
       function showGarden() {
         kaleidoscope.destroy();
 
-        let body = document.getElementsByTagName('body')[0];
+        var body = document.getElementsByTagName('body')[0];
         body.setAttribute('class', 'garden');
-        let background = document.querySelector('#background');
-        let canvas = document.createElement('canvas');
+        var background = document.querySelector('#background');
+        var canvas = document.createElement('canvas');
         canvas.id = 'kaleidoscope';
         background.appendChild(canvas);
 
@@ -133,10 +138,10 @@
       function showMidnight() {
         kaleidoscope.destroy();
 
-        let body = document.getElementsByTagName('body')[0];
+        var body = document.getElementsByTagName('body')[0];
         body.setAttribute('class', 'midnight');
-        let background = document.querySelector('#background');
-        let canvas = document.createElement('canvas');
+        var background = document.querySelector('#background');
+        var canvas = document.createElement('canvas');
         canvas.id = 'kaleidoscope';
         background.appendChild(canvas);
 
@@ -156,14 +161,14 @@
       function showBaby() {
         kaleidoscope.destroy();
 
-        let body = document.getElementsByTagName('body')[0];
+        var body = document.getElementsByTagName('body')[0];
         body.setAttribute('class', 'baby');
-        let background = document.querySelector('#background');
-        let canvas = document.createElement('canvas');
+        var background = document.querySelector('#background');
+        var canvas = document.createElement('canvas');
         canvas.id = 'kaleidoscope';
         background.appendChild(canvas);
 
-        let shapes = [
+        var shapes = [
           'circle',
           'square',
           'wave',
@@ -173,12 +178,13 @@
           'oval',
           'triangle',
         ];
-        let choose = [];
-        for (let i = 0; i < 3; i += 1) {
-          let random = Math.floor(Math.random() * shapes.length);
+        var choose = [];
+        for (var i = 0; i < 3; i += 1) {
+          var random = Math.floor(Math.random() * shapes.length);
           choose.push(shapes[random]);
           shapes.splice(random, 1);
         }
+
         kaleidoscope = new Kaleidoscope({
           selector: '#kaleidoscope',
           edge: 8,

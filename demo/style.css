@@ -30,9 +30,6 @@ body {
   text-align: center;
 }
 
-.inner {
-}
-
 .title {
   margin: 0;
   font-size: 60px;
@@ -81,19 +78,19 @@ body {
 .button.change-bg.val:active {
   background: #c38d94;
 }
-.button.change-bg.mid {
-  background: #1282a2;
-}
-.button.change-bg.mid:hover,
-.button.change-bg.mid:active {
-  background: #034078;
-}
 .button.change-bg.gar {
   background: #72b7a6;
 }
 .button.change-bg.gar:hover,
 .button.change-bg.gar:active {
   background: #347c81;
+}
+.button.change-bg.mid {
+  background: #1282a2;
+}
+.button.change-bg.mid:hover,
+.button.change-bg.mid:active {
+  background: #034078;
 }
 .button.change-bg.bab {
   background: #ecfdff;
