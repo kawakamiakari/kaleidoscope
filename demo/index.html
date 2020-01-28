@@ -36,7 +36,9 @@
           <a class="button change-bg mid" onclick="showMidnight()">
             <img class="icon" src="icons/nights_stay-24px.svg" alt="" />
           </a>
-          <a class="button change-bg val" onclick="showValentine()">❤️</a>
+          <a class="button change-bg bab" onclick="showBaby()">
+            <img class="icon" src="icons/category-24px.svg" alt="" />
+          </a>
         </p>
         <p>
           <a
@@ -148,6 +150,43 @@
           globalCompositeOperation: 'multiply',
           quantity: 70,
           speed: 0.1,
+        });
+      }
+
+      function showBaby() {
+        kaleidoscope.destroy();
+
+        let body = document.getElementsByTagName('body')[0];
+        body.setAttribute('class', 'baby');
+        let background = document.querySelector('#background');
+        let canvas = document.createElement('canvas');
+        canvas.id = 'kaleidoscope';
+        background.appendChild(canvas);
+
+        let shapes = [
+          'circle',
+          'square',
+          'wave',
+          'heart',
+          'star',
+          'drop',
+          'oval',
+          'triangle',
+        ];
+        let choose = [];
+        for (let i = 0; i < 3; i += 1) {
+          let random = Math.floor(Math.random() * shapes.length);
+          choose.push(shapes[random]);
+          shapes.splice(random, 1);
+        }
+        kaleidoscope = new Kaleidoscope({
+          selector: '#kaleidoscope',
+          edge: 8,
+          shapes: choose,
+          minSize: 40 + Math.floor(Math.random() * 20),
+          maxSize: 60 + Math.floor(Math.random() * 20),
+          color: ['#F7D1E2', '#ECE7BB', '#BBDFDD', '#D4ECF7'],
+          quantity: 30,
         });
       }
     </script>

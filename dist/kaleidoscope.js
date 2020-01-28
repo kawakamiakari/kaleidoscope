@@ -330,6 +330,24 @@ var Kaleidoscope = (function () {
                     context.fill();
                     context.restore();
                     break;
+                case 'triangle':
+                    context.save();
+                    // Settings
+                    context.fillStyle = this.color;
+                    context.globalAlpha = this.opacity;
+                    // Rotate
+                    context.translate(this.x + this.size / 2, this.y + (1 - Math.tan(Math.PI / 6) / 2) * this.size);
+                    context.rotate(this.radian);
+                    context.translate(-(this.size / 2), -((1 - Math.tan(Math.PI / 6) / 2) * this.size));
+                    // Draw
+                    context.beginPath();
+                    context.moveTo(0, this.size);
+                    context.lineTo(this.size / 2, (1 - Math.tan(Math.PI / 3) / 2) * this.size);
+                    context.lineTo(this.size, this.size);
+                    context.closePath();
+                    context.fill();
+                    context.restore();
+                    break;
                 default:
                     break;
             }

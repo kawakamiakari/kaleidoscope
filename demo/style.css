@@ -95,6 +95,13 @@ body {
 .button.change-bg.gar:active {
   background: #347c81;
 }
+.button.change-bg.bab {
+  background: #ecfdff;
+}
+.button.change-bg.bab:hover,
+.button.change-bg.bab:active {
+  background: #ececff;
+}
 
 .button.link {
   display: inline-block;
@@ -208,4 +215,28 @@ body.midnight .button.link:hover,
 body.midnight .button.link:active {
   color: #0a1128;
   background: #fff;
+}
+
+body.baby {
+  color: #59656f;
+  background: #ecfdff;
+}
+body.baby .title {
+  text-shadow: 2px 2px 0 #ecfdff, -2px 2px 0 #ecfdff, 2px -2px 0 #ecfdff,
+    -2px -2px 0 #ecfdff;
+}
+body.baby .description {
+  text-shadow: 1px 1px 0 #ecfdff, -1px 1px 0 #ecfdff, 1px -1px 0 #ecfdff,
+    -1px -1px 0 #ecfdff;
+}
+body.baby .button {
+  border-color: #59656f;
+}
+body.baby .button.link {
+  color: #59656f;
+}
+body.baby .button.link:hover,
+body.baby .button.link:active {
+  color: #ecfdff;
+  background: #59656f;
 }
