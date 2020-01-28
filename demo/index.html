@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Kaleidoscope</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Titillium+Web&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script>
+      window.exports = { __esModule: true };
+    </script>
+  </head>
+
+  <body class="default">
+    <!-- Kaleidoscope container. -->
+    <div id="background">
+      <canvas id="kaleidoscope"></canvas>
+    </div>
+
+    <div class="contents">
+      <div class="inner">
+        <h1 class="title">Kaleidoscope</h1>
+        <p class="description">
+          A lightweight JavaScript plugin for particle backgrounds.
+        </p>
+        <p>
+          <a class="button change-bg def" onclick="showDefault()">
+            <img class="icon" src="icons/trip_origin-24px.svg" alt="" />
+          </a>
+          <a class="button change-bg val" onclick="showValentine()">
+            <img class="icon" src="icons/favorite-24px.svg" alt="" />
+          </a>
+          <a class="button change-bg gar" onclick="showGarden()">
+            <img class="icon" src="icons/eco-24px.svg" alt="" />
+          </a>
+          <a class="button change-bg mid" onclick="showMidnight()">
+            <img class="icon" src="icons/nights_stay-24px.svg" alt="" />
+          </a>
+          <a class="button change-bg bab" onclick="showBaby()">
+            <img class="icon" src="icons/category-24px.svg" alt="" />
+          </a>
+        </p>
+        <p>
+          <a
+            class="button link"
+            href="https://github.com/kawakamiakari/kaleidoscope"
+          >
+            <img class="icon" src="icons/GitHub-Mark-120px-plus.png" alt="" />
+            GitHub
+          </a>
+          <a
+            class="button link"
+            href="https://github.com/kawakamiakari/kaleidoscope/archive/master.zip"
+            download
+          >
+            <img class="icon" src="icons/cloud_download-24px.svg" alt="" />
+            Download
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Script. -->
+    <script src="../dist/kaleidoscope.min.js"></script>
+    <script>
+      // Default usage.
+      var kaleidoscope;
+      window.onload = function() {
+        kaleidoscope = new Kaleidoscope({
+          selector: '#kaleidoscope',
+        });
+      };
+
+      // Optional usage.
+      function showDefault() {
+        kaleidoscope.destroy();
+
+        var body = document.getElementsByTagName('body')[0];
+        body.setAttribute('class', 'default');
+        var background = document.querySelector('#background');
+        var canvas = document.createElement('canvas');
+        canvas.id = 'kaleidoscope';
+        background.appendChild(canvas);
+
+        kaleidoscope = new Kaleidoscope({
+          selector: '#kaleidoscope',
+        });
+      }
+
+      function showValentine() {
+        kaleidoscope.destroy();
+
+        var body = document.getElementsByTagName('body')[0];
+        body.setAttribute('class', 'valentine');
+        var background = document.querySelector('#background');
+        var canvas = document.createElement('canvas');
+        canvas.id = 'kaleidoscope';
+        background.appendChild(canvas);
+
+        kaleidoscope = new Kaleidoscope({
+          selector: '#kaleidoscope',
+          edge: 6,
+          shapes: ['heart', 'square'],
+          minSize: 80,
+          maxSize: 90,
+          color: ['#C38D94', '#DEDBD2', '#EDBFC6', '#5F4842'],
+          globalCompositeOperation: 'screen',
+          quantity: 30,
+          speed: 0.2,
+        });
+      }
+
+      function showGarden() {
+        kaleidoscope.destroy();
+
+        var body = document.getElementsByTagName('body')[0];
+        body.setAttribute('class', 'garden');
+        var background = document.querySelector('#background');
+        var canvas = document.createElement('canvas');
+        canvas.id = 'kaleidoscope';
+        background.appendChild(canvas);
+
+        kaleidoscope = new Kaleidoscope({
+          selector: '#kaleidoscope',
+          edge: 7,
+          shapes: ['drop', 'circle', 'oval'],
+          minSize: 15,
+          maxSize: 90,
+          color: ['#114956', '#DED8CE', '#443650', '#347C81'],
+          globalCompositeOperation: 'multiply',
+          quantity: 40,
+          speed: 0.4,
+        });
+      }
+
+      function showMidnight() {
+        kaleidoscope.destroy();
+
+        var body = document.getElementsByTagName('body')[0];
+        body.setAttribute('class', 'midnight');
+        var background = document.querySelector('#background');
+        var canvas = document.createElement('canvas');
+        canvas.id = 'kaleidoscope';
+        background.appendChild(canvas);
+
+        kaleidoscope = new Kaleidoscope({
+          selector: '#kaleidoscope',
+          edge: 5,
+          shapes: ['star', 'circle'],
+          minSize: 5,
+          maxSize: 40,
+          color: ['#001F54', '#034078', '#1282A2', '#F9F4E0'],
+          globalCompositeOperation: 'multiply',
+          quantity: 70,
+          speed: 0.1,
+        });
+      }
+
+      function showBaby() {
+        kaleidoscope.destroy();
+
+        var body = document.getElementsByTagName('body')[0];
+        body.setAttribute('class', 'baby');
+        var background = document.querySelector('#background');
+        var canvas = document.createElement('canvas');
+        canvas.id = 'kaleidoscope';
+        background.appendChild(canvas);
+
+        var shapes = [
+          'circle',
+          'square',
+          'wave',
+          'heart',
+          'star',
+          'drop',
+          'oval',
+          'triangle',
+        ];
+        var choose = [];
+        for (var i = 0; i < 3; i += 1) {
+          var random = Math.floor(Math.random() * shapes.length);
+          choose.push(shapes[random]);
+          shapes.splice(random, 1);
+        }
+
+        kaleidoscope = new Kaleidoscope({
+          selector: '#kaleidoscope',
+          edge: 8,
+          shapes: choose,
+          minSize: 40 + Math.floor(Math.random() * 20),
+          maxSize: 60 + Math.floor(Math.random() * 20),
+          color: ['#F7D1E2', '#ECE7BB', '#BBDFDD', '#D4ECF7'],
+          quantity: 30,
+        });
+      }
+    </script>
+  </body>
+</html>

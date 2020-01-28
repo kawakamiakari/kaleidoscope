@@ -1,0 +1,239 @@
+body {
+  margin: 0;
+  font-family: 'Titillium Web', YuGothic, 'Yu Gothic',
+    'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', 'メイリオ', Meiryo,
+    'ＭＳ ゴシック', sans-serif;
+}
+
+#background {
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: -webkit-fill-available;
+  width: -webkit-fill-available;
+}
+
+.contents {
+  display: flex;
+  position: relative;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: -webkit-fill-available;
+  width: -webkit-fill-available;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-size: 60px;
+  font-weight: bold;
+  letter-spacing: 0.2em;
+}
+
+.description {
+  margin: 0 0 5rem 0;
+}
+
+.button {
+  border: #000 solid 1px;
+  transition: 0.25s;
+}
+
+.button.change-bg {
+  display: inline-block;
+  margin: 0 20px;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 36px;
+  border: #000 solid 1px;
+  border-radius: 40px;
+}
+
+.button.change-bg .icon {
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+}
+
+.button.change-bg.def {
+  background: #fff;
+}
+.button.change-bg.def:hover,
+.button.change-bg.def:active {
+  background: #f5f749;
+}
+.button.change-bg.val {
+  background: #f7e1d7;
+}
+.button.change-bg.val:hover,
+.button.change-bg.val:active {
+  background: #c38d94;
+}
+.button.change-bg.gar {
+  background: #72b7a6;
+}
+.button.change-bg.gar:hover,
+.button.change-bg.gar:active {
+  background: #347c81;
+}
+.button.change-bg.mid {
+  background: #1282a2;
+}
+.button.change-bg.mid:hover,
+.button.change-bg.mid:active {
+  background: #034078;
+}
+.button.change-bg.bab {
+  background: #ecfdff;
+}
+.button.change-bg.bab:hover,
+.button.change-bg.bab:active {
+  background: #ececff;
+}
+
+.button.link {
+  display: inline-block;
+  min-width: 9rem;
+  margin: 0 20px;
+  padding: 10px;
+  text-align: center;
+  font-size: 1.1rem;
+  text-shadow: none;
+  text-decoration: none;
+  border-radius: 3px;
+  backdrop-filter: blur(25px);
+}
+
+.button.link .icon {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+body.default {
+  color: #000;
+  background: #fff;
+}
+body.default .title {
+  text-shadow: 2px 2px 0 #fff, -2px 2px 0 #fff, 2px -2px 0 #fff,
+    -2px -2px 0 #fff;
+}
+body.default .description {
+  text-shadow: 1px 1px 0 #fff, -1px 1px 0 #fff, 1px -1px 0 #fff,
+    -1px -1px 0 #fff;
+}
+body.default .button {
+  border-color: #000;
+}
+body.default .button.link {
+  color: #000;
+}
+body.default .button.link:hover,
+body.default .button.link:active {
+  color: #fff;
+  background: #000;
+}
+
+body.valentine {
+  color: #5f4842;
+  background: #f7e1d7;
+}
+body.valentine .title {
+  text-shadow: 2px 2px 0 #f7e1d7, -2px 2px 0 #f7e1d7, 2px -2px 0 #f7e1d7,
+    -2px -2px 0 #f7e1d7;
+}
+body.valentine .description {
+  text-shadow: 1px 1px 0 #f7e1d7, -1px 1px 0 #f7e1d7, 1px -1px 0 #f7e1d7,
+    -1px -1px 0 #f7e1d7;
+}
+body.valentine .button {
+  border-color: #5f4842;
+}
+body.valentine .button.link {
+  color: #5f4842;
+}
+body.valentine .button.link:hover,
+body.valentine .button.link:active {
+  color: #f7e1d7;
+  background: #5f4842;
+}
+
+body.garden {
+  color: #443650;
+  background: #72b7a6;
+}
+body.garden .title {
+  text-shadow: 2px 2px 0 #72b7a6, -2px 2px 0 #72b7a6, 2px -2px 0 #72b7a6,
+    -2px -2px 0 #72b7a6;
+}
+body.garden .description {
+  text-shadow: 1px 1px 0 #72b7a6, -1px 1px 0 #72b7a6, 1px -1px 0 #72b7a6,
+    -1px -1px 0 #72b7a6;
+}
+body.garden .button {
+  border-color: #443650;
+}
+body.garden .button.link {
+  color: #443650;
+}
+body.garden .button.link:hover,
+body.garden .button.link:active {
+  color: #72b7a6;
+  background: #443650;
+}
+
+body.midnight {
+  color: #fff;
+  background: #0a1128;
+}
+body.midnight .title {
+  text-shadow: 2px 2px 0 #0a1128, -2px 2px 0 #0a1128, 2px -2px 0 #0a1128,
+    -2px -2px 0 #0a1128;
+}
+body.midnight .description {
+  text-shadow: 1px 1px 0 #0a1128, -1px 1px 0 #0a1128, 1px -1px 0 #0a1128,
+    -1px -1px 0 #0a1128;
+}
+body.midnight .button {
+  border-color: #fff;
+}
+body.midnight .button.link {
+  color: #fff;
+}
+body.midnight .button.link:hover,
+body.midnight .button.link:active {
+  color: #0a1128;
+  background: #fff;
+}
+
+body.baby {
+  color: #59656f;
+  background: #ecfdff;
+}
+body.baby .title {
+  text-shadow: 2px 2px 0 #ecfdff, -2px 2px 0 #ecfdff, 2px -2px 0 #ecfdff,
+    -2px -2px 0 #ecfdff;
+}
+body.baby .description {
+  text-shadow: 1px 1px 0 #ecfdff, -1px 1px 0 #ecfdff, 1px -1px 0 #ecfdff,
+    -1px -1px 0 #ecfdff;
+}
+body.baby .button {
+  border-color: #59656f;
+}
+body.baby .button.link {
+  color: #59656f;
+}
+body.baby .button.link:hover,
+body.baby .button.link:active {
+  color: #ecfdff;
+  background: #59656f;
+}
