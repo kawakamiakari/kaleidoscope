@@ -184,6 +184,7 @@ const Kaleidoscope = (() => {
       window.addEventListener('mousemove', this.listenerMousemove);
     }
 
+    // Calculate the formula for the border.
     private calculateBorder() {
       const canvas: HTMLCanvasElement = document.querySelector(
         this.options.selector,
@@ -263,67 +264,12 @@ const Kaleidoscope = (() => {
       this.directionY = pipe.directionY;
 
       this.initializeEvents();
-
-      return this;
     }
 
     // The particles draw function.
     public draw() {
       const context = this.context;
       switch (this.shape) {
-        case 'square':
-          context.save();
-
-          // Settings
-          context.fillStyle = this.color;
-          context.globalAlpha = this.opacity;
-
-          // Rotate
-          context.translate(this.x + this.size / 2, this.y + this.size / 2);
-          context.rotate(this.radian);
-          context.translate(
-            -(this.x + this.size / 2),
-            -(this.y + this.size / 2),
-          );
-
-          // Draw
-          context.beginPath();
-          context.rect(this.x, this.y, this.size, this.size);
-          context.closePath();
-          context.fill();
-
-          context.restore();
-          break;
-        case 'wave':
-          context.save();
-
-          // Settings
-          context.strokeStyle = this.color;
-          context.globalAlpha = this.opacity;
-          context.lineWidth = this.size * 0.3;
-          context.lineJoin = 'round';
-          context.lineCap = 'round';
-
-          // Rotate
-          context.translate(this.x + this.size * 0.5, this.y + this.size * 0.2);
-          context.rotate(this.radian);
-          context.translate(
-            -(this.x + this.size * 0.5),
-            -(this.y + this.size * 0.2),
-          );
-
-          // Draw
-          context.beginPath();
-          context.moveTo(this.x, this.y);
-          context.lineTo(this.x + this.size * 0.2, this.y + this.size * 0.4);
-          context.lineTo(this.x + this.size * 0.4, this.y);
-          context.lineTo(this.x + this.size * 0.6, this.y + this.size * 0.4);
-          context.lineTo(this.x + this.size * 0.8, this.y);
-          context.lineTo(this.x + this.size, this.y + this.size * 0.4);
-          context.stroke();
-
-          context.restore();
-          break;
         case 'circle':
           context.save();
 
@@ -339,115 +285,6 @@ const Kaleidoscope = (() => {
 
           context.restore();
           break;
-        case 'heart':
-          context.save();
-
-          // Settings
-          context.fillStyle = this.color;
-          context.globalAlpha = this.opacity;
-
-          // Rotate
-          context.translate(this.x + this.size / 2, this.y + this.size / 2);
-          context.rotate(this.radian);
-          context.translate(
-            -(this.x + this.size / 2),
-            -(this.y + this.size / 2),
-          );
-
-          // Draw
-          context.beginPath();
-          context.moveTo(
-            this.x + (this.size * 75) / 130,
-            this.y + (this.size * 40) / 140,
-          );
-          context.bezierCurveTo(
-            this.x + (this.size * 75) / 130,
-            this.y + (this.size * 37) / 140,
-            this.x + (this.size * 70) / 130,
-            this.y + (this.size * 25) / 140,
-            this.x + (this.size * 50) / 130,
-            this.y + (this.size * 25) / 140,
-          );
-          context.bezierCurveTo(
-            this.x + (this.size * 20) / 130,
-            this.y + (this.size * 25) / 140,
-            this.x + (this.size * 20) / 130,
-            this.y + (this.size * 62.5) / 140,
-            this.x + (this.size * 20) / 130,
-            this.y + (this.size * 62.5) / 140,
-          );
-          context.bezierCurveTo(
-            this.x + (this.size * 20) / 130,
-            this.y + (this.size * 80) / 140,
-            this.x + (this.size * 40) / 130,
-            this.y + (this.size * 102) / 140,
-            this.x + (this.size * 75) / 130,
-            this.y + (this.size * 120) / 140,
-          );
-          context.bezierCurveTo(
-            this.x + (this.size * 110) / 130,
-            this.y + (this.size * 102) / 140,
-            this.x + this.size,
-            this.y + (this.size * 80) / 140,
-            this.x + this.size,
-            this.y + (this.size * 62.5) / 140,
-          );
-          context.bezierCurveTo(
-            this.x + this.size,
-            this.y + (this.size * 62.5) / 140,
-            this.x + this.size,
-            this.y + (this.size * 25) / 140,
-            this.x + (this.size * 100) / 130,
-            this.y + (this.size * 25) / 140,
-          );
-          context.bezierCurveTo(
-            this.x + (this.size * 85) / 130,
-            this.y + (this.size * 25) / 140,
-            this.x + (this.size * 75) / 130,
-            this.y + (this.size * 37) / 140,
-            this.x + (this.size * 75) / 130,
-            this.y + (this.size * 40) / 140,
-          );
-          context.fill();
-
-          context.restore();
-          break;
-        case 'star':
-          context.save();
-
-          // Settings
-          context.fillStyle = this.color;
-          context.globalAlpha = this.opacity;
-
-          // Rotate
-          context.translate(
-            this.x + this.size / 2,
-            this.y + this.size * (9 / 10),
-          );
-          context.rotate(this.radian);
-          context.translate(
-            -(this.x + this.size / 2),
-            -(this.y + this.size * (9 / 10)),
-          );
-
-          // Draw
-          context.beginPath();
-          context.moveTo(this.x, this.y + (this.size * 70) / 200);
-          context.lineTo(this.x + this.size, this.y + (this.size * 70) / 200);
-          context.lineTo(
-            this.x + (this.size * 35) / 200,
-            this.y + (this.size * 180) / 200,
-          );
-          context.lineTo(this.x + (this.size * 100) / 200, this.y);
-          context.lineTo(
-            this.x + (this.size * 165) / 200,
-            this.y + (this.size * 180) / 200,
-          );
-          context.closePath();
-          context.fill();
-
-          context.restore();
-          break;
         case 'drop':
           context.save();
 
@@ -458,35 +295,94 @@ const Kaleidoscope = (() => {
           // Rotate
           context.translate(this.x + this.size / 3, this.y + this.size / 2);
           context.rotate(this.radian);
-          context.translate(
-            -(this.x + this.size / 3),
-            -(this.y + this.size / 2),
-          );
+          context.translate(-(this.size / 3), -(this.size / 2));
 
           // Draw
           context.beginPath();
-          context.moveTo(this.x, this.y + this.size * (2 / 3));
+          context.moveTo(0, this.size * (2 / 3));
+          context.quadraticCurveTo(0, this.size / 3, this.size / 3, 0);
           context.quadraticCurveTo(
-            this.x,
-            this.y + this.size / 3,
-            this.x + this.size / 3,
-            this.y,
-          );
-          context.quadraticCurveTo(
-            this.x + this.size * (2 / 3),
-            this.y + this.size * (1 / 3),
-            this.x + this.size * (2 / 3),
-            this.y + this.size * (2 / 3),
+            this.size * (2 / 3),
+            this.size * (1 / 3),
+            this.size * (2 / 3),
+            this.size * (2 / 3),
           );
           context.arc(
-            this.x + this.size * (1 / 3),
-            this.y + this.size * (2 / 3),
+            this.size * (1 / 3),
+            this.size * (2 / 3),
             this.size * (1 / 3),
             0,
             Math.PI,
             false,
           );
           context.closePath();
+          context.fill();
+
+          context.restore();
+          break;
+        case 'heart':
+          context.save();
+
+          // Settings
+          context.fillStyle = this.color;
+          context.globalAlpha = this.opacity;
+
+          // Rotate
+          context.translate(this.x + this.size / 2, this.y + this.size / 2);
+          context.rotate(this.radian);
+          context.translate(-(this.size / 2), -(this.size / 2));
+
+          // Draw
+          context.beginPath();
+          context.moveTo(this.size * (75 / 130), this.size * (40 / 140));
+          context.bezierCurveTo(
+            this.size * (75 / 130),
+            this.size * (37 / 140),
+            this.size * (70 / 130),
+            this.size * (25 / 140),
+            this.size * (50 / 130),
+            this.size * (25 / 140),
+          );
+          context.bezierCurveTo(
+            this.size * (20 / 130),
+            this.size * (25 / 140),
+            this.size * (20 / 130),
+            this.size * (62.5 / 140),
+            this.size * (20 / 130),
+            this.size * (62.5 / 140),
+          );
+          context.bezierCurveTo(
+            this.size * (20 / 130),
+            this.size * (80 / 140),
+            this.size * (40 / 130),
+            this.size * (102 / 140),
+            this.size * (75 / 130),
+            this.size * (120 / 140),
+          );
+          context.bezierCurveTo(
+            this.size * (110 / 130),
+            this.size * (102 / 140),
+            this.size,
+            this.size * (80 / 140),
+            this.size,
+            this.size * (62.5 / 140),
+          );
+          context.bezierCurveTo(
+            this.size,
+            this.size * (62.5 / 140),
+            this.size,
+            this.size * (25 / 140),
+            this.size * (100 / 130),
+            this.size * (25 / 140),
+          );
+          context.bezierCurveTo(
+            this.size * (85 / 130),
+            this.size * (25 / 140),
+            this.size * (75 / 130),
+            this.size * (37 / 140),
+            this.size * (75 / 130),
+            this.size * (40 / 140),
+          );
           context.fill();
 
           context.restore();
@@ -507,6 +403,53 @@ const Kaleidoscope = (() => {
           // Draw
           context.beginPath();
           context.arc(0, 0, this.size / 2, 0, 2 * Math.PI, false);
+          context.closePath();
+          context.fill();
+
+          context.restore();
+          break;
+        case 'square':
+          context.save();
+
+          // Settings
+          context.fillStyle = this.color;
+          context.globalAlpha = this.opacity;
+
+          // Rotate
+          context.translate(this.x + this.size / 2, this.y + this.size / 2);
+          context.rotate(this.radian);
+          context.translate(-(this.size / 2), -(this.size / 2));
+
+          // Draw
+          context.beginPath();
+          context.rect(0, 0, this.size, this.size);
+          context.closePath();
+          context.fill();
+
+          context.restore();
+          break;
+        case 'star':
+          context.save();
+
+          // Settings
+          context.fillStyle = this.color;
+          context.globalAlpha = this.opacity;
+
+          // Rotate
+          context.translate(
+            this.x + this.size / 2,
+            this.y + this.size * (9 / 10),
+          );
+          context.rotate(this.radian);
+          context.translate(-(this.size / 2), -(this.size * (9 / 10)));
+
+          // Draw
+          context.beginPath();
+          context.moveTo(0, this.size * (70 / 200));
+          context.lineTo(this.size, this.size * (70 / 200));
+          context.lineTo(this.size * (35 / 200), this.size * (180 / 200));
+          context.lineTo(this.size * (100 / 200), 0);
+          context.lineTo(this.size * (165 / 200), this.size * (180 / 200));
           context.closePath();
           context.fill();
 
@@ -540,6 +483,33 @@ const Kaleidoscope = (() => {
           context.lineTo(this.size, this.size);
           context.closePath();
           context.fill();
+
+          context.restore();
+          break;
+        case 'wave':
+          context.save();
+
+          // Settings
+          context.strokeStyle = this.color;
+          context.globalAlpha = this.opacity;
+          context.lineWidth = this.size * 0.3;
+          context.lineJoin = 'round';
+          context.lineCap = 'round';
+
+          // Rotate
+          context.translate(this.x + this.size * 0.5, this.y + this.size * 0.2);
+          context.rotate(this.radian);
+          context.translate(-(this.size * 0.5), -(this.size * 0.2));
+
+          // Draw
+          context.beginPath();
+          context.moveTo(0, 0);
+          context.lineTo(this.size * 0.2, this.size * 0.4);
+          context.lineTo(this.size * 0.4, 0);
+          context.lineTo(this.size * 0.6, this.size * 0.4);
+          context.lineTo(this.size * 0.8, 0);
+          context.lineTo(this.size, this.size * 0.4);
+          context.stroke();
 
           context.restore();
           break;
@@ -608,8 +578,6 @@ const Kaleidoscope = (() => {
       this.initializePipe();
       this.initializeStorage();
       this.animate();
-
-      return this;
     }
 
     // destroy the plugin.
