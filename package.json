@@ -1,5 +1,5 @@
 {
-  "name": "kaleidoscope-js",
+  "name": "ak-kaleidoscope",
   "version": "0.0.1",
   "description": "A lightweight JavaScript plugin for particle backgrounds.",
   "main": "dist/kaleidoscope.min.js",
@@ -16,6 +16,7 @@
   "keywords": [
     "animation",
     "background",
+    "canvas",
     "javascript",
     "kaleidoscope",
     "particles"
