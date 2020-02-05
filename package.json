@@ -1,23 +1,30 @@
 {
-  "name": "kaleidoscope",
-  "version": "0.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "build": "gulp",
-    "build:watch": "gulp watch",
-    "lint": "tslint \"src/**/*.ts\""
-  },
+  "name": "kaleidoscope-js",
+  "version": "0.0.1",
+  "description": "A lightweight JavaScript plugin for particle backgrounds.",
+  "main": "dist/kaleidoscope.min.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kawakamiakari/kaleidoscope.git"
   },
-  "author": "",
+  "author": "Kawakami Akari <akari.k.c5@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/kawakamiakari/kaleidoscope/issues"
   },
   "homepage": "https://github.com/kawakamiakari/kaleidoscope#readme",
+  "keywords": [
+    "animation",
+    "background",
+    "javascript",
+    "kaleidoscope",
+    "particles"
+  ],
+  "scripts": {
+    "build": "gulp",
+    "build:watch": "gulp watch",
+    "lint": "tslint \"src/**/*.ts\""
+  },
   "devDependencies": {
     "@types/node": "^13.1.8",
     "gulp": "^4.0.2",
