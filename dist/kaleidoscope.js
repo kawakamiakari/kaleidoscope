@@ -432,7 +432,7 @@ var Kaleidoscope = (function () {
         // Setup the canvas element.
         Plugin.prototype.initializeCanvas = function () {
             if (!this.options.selector) {
-                console.warn('kaleidoscope.js: No selector specified!' +
+                console.warn('ak-kaleidoscope: No selector specified!' +
                     'Check https://github.com/kawakamiakari/kaleidoscope');
                 return false;
             }

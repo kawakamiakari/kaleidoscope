@@ -611,7 +611,7 @@ const Kaleidoscope = (() => {
     private initializeCanvas() {
       if (!this.options.selector) {
         console.warn(
-          'kaleidoscope.js: No selector specified!' +
+          'ak-kaleidoscope: No selector specified!' +
             'Check https://github.com/kawakamiakari/kaleidoscope',
         );
         return false;
