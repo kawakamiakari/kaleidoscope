@@ -36,7 +36,11 @@ function buildMinify() {
     .pipe(dest('dist'));
 }
 
+function copyForDemo() {
+  return src('dist/kaleidoscope.min.js').pipe(dest('docs'));
+}
+
 exports.watch = function() {
-  watch('src/*.ts', series(buildClean, build, buildMinify));
+  watch('src/*.ts', series(buildClean, build, buildMinify, copyForDemo));
 };
-exports.default = series(buildClean, build, buildMinify);
+exports.default = series(buildClean, build, buildMinify, copyForDemo);
