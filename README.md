@@ -15,7 +15,7 @@ The examples code can be found in the `docs/` folder.
 There are several ways to install ak-kaleidoscope:
 
 - [Download the latest version](https://github.com/kawakamiakari/kaleidoscope/archive/master.zip)
-- Install with npm: `npm install kaleidosope-js --save`
+- Install with npm: `npm install ak-kaleidoscope --save`
 
 ## Usage
 
