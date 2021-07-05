@@ -1,6 +1,6 @@
 {
   "name": "ak-kaleidoscope",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A lightweight JavaScript plugin for particle backgrounds.",
   "main": "dist/kaleidoscope.min.js",
   "repository": {
