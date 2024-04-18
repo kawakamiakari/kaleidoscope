@@ -24,17 +24,22 @@
   "scripts": {
     "build": "gulp",
     "build:watch": "gulp watch",
-    "lint": "tslint \"src/**/*.ts\""
+    "lint": "eslint \"src/**/*.ts\""
   },
   "devDependencies": {
-    "@types/node": "^13.1.8",
+    "@eslint/js": "^9.0.0",
+    "@types/node": "^13.13.52",
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^18.0.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
     "gulp": "^4.0.2",
     "gulp-clean": "^0.4.0",
     "gulp-rename": "^2.0.0",
     "gulp-typescript": "^6.0.0-alpha.1",
     "gulp-uglify": "^3.0.2",
-    "tslint": "^5.20.1",
-    "tslint-config-airbnb": "^5.11.2",
-    "typescript": "^3.7.5"
+    "typescript": "^3.9.10",
+    "typescript-eslint": "^7.7.0"
   }
 }
