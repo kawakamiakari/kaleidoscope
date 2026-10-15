@@ -108,9 +108,12 @@
         <details class="get-started">
           <summary class="button link">Get started</summary>
           <div class="snippet">
-            <button type="button" class="copy" onclick="copySnippet(this)">
-              Copy
-            </button>
+            <div class="snippet-header">
+              <span>Add to your HTML</span>
+              <button type="button" class="copy" onclick="copySnippet(this)">
+                Copy
+              </button>
+            </div>
             <pre><code id="snippet-code">&lt;canvas id="kaleidoscope"&gt;&lt;/canvas&gt;
 &lt;script src="https://cdn.jsdelivr.net/npm/ak-kaleidoscope@2/dist/kaleidoscope.min.js"&gt;&lt;/script&gt;
 &lt;script&gt;

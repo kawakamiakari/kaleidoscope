@@ -79,7 +79,10 @@ button.button {
 }
 
 .button.change-bg {
-  display: inline-block;
+  display: inline-flex;
+  box-sizing: content-box;
+  justify-content: center;
+  align-items: center;
   margin: 0 1.25rem;
   width: 2.5rem;
   height: 2.5rem;
@@ -91,9 +94,9 @@ button.button {
 }
 
 .button.change-bg .icon {
+  display: block;
   width: 1.5rem;
   height: 1.5rem;
-  vertical-align: middle;
 }
 
 .button.change-bg.def {
@@ -133,7 +136,11 @@ button.button {
 }
 
 .button.link {
-  display: inline-block;
+  display: inline-flex;
+  box-sizing: content-box;
+  gap: 0.3em;
+  justify-content: center;
+  align-items: center;
   min-width: 9rem;
   margin: 0 1.25rem;
   padding: 0.625rem;
@@ -146,6 +153,7 @@ button.button {
 }
 
 .button.link .icon {
+  display: block;
   width: 1.1rem;
   height: 1.1rem;
 }
@@ -169,44 +177,57 @@ button.button {
 }
 
 .snippet {
-  position: relative;
   box-sizing: border-box;
   max-width: min(40rem, 90vw);
   margin: 1.25rem auto 0;
-  padding: 1rem 1.25rem;
+  overflow: hidden;
   text-align: left;
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
   border: currentColor solid 1px;
   border-radius: 3px;
   backdrop-filter: blur(25px);
 }
 
+.snippet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem 0.5rem 1rem;
+  font-size: 0.8rem;
+  border-bottom: currentColor solid 1px;
+}
+
 .snippet pre {
   margin: 0;
+  padding: 1rem;
   overflow-x: auto;
   font-size: 0.8rem;
   line-height: 1.6;
+  background: color-mix(in srgb, currentColor 8%, transparent);
 }
 
 .snippet-note {
-  margin: 0.75rem 0 0;
+  margin: 0;
+  padding: 0.75rem 1rem;
   font-size: 0.8rem;
 }
 
 .snippet .copy {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  padding: 0.125rem 0.5rem;
+  padding: 0.25rem 0.75rem;
   font: inherit;
-  font-size: 0.75rem;
-  color: inherit;
-  background: transparent;
-  border: currentColor solid 1px;
+  color: var(--bg);
+  background: var(--fg);
+  border: none;
   border-radius: 3px;
   cursor: pointer;
 }
+.snippet .copy:hover {
+  opacity: 0.8;
+}
 
 body.default {
+  --fg: #000;
+  --bg: #fff;
   color: #000;
   background: #fff;
 }
@@ -237,6 +258,8 @@ body.default .button.link:active {
 }
 
 body.valentine {
+  --fg: #5f4842;
+  --bg: #f7e1d7;
   color: #5f4842;
   background: #f7e1d7;
 }
@@ -267,6 +290,8 @@ body.valentine .button.link:active {
 }
 
 body.garden {
+  --fg: #443650;
+  --bg: #72b7a6;
   color: #443650;
   background: #72b7a6;
 }
@@ -297,6 +322,8 @@ body.garden .button.link:active {
 }
 
 body.midnight {
+  --fg: #fff;
+  --bg: #0a1128;
   color: #fff;
   background: #0a1128;
 }
@@ -327,6 +354,8 @@ body.midnight .button.link:active {
 }
 
 body.baby {
+  --fg: #59656f;
+  --bg: #ecfdff;
   color: #59656f;
   background: #ecfdff;
 }
