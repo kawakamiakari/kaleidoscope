@@ -4,17 +4,6 @@ body {
   height: 100%;
 }
 
-@media (min-width: 0) {
-  html {
-    font-size: 24px;
-  }
-}
-@media (min-width: 992px) {
-  html {
-    font-size: 16px;
-  }
-}
-
 body {
   margin: 0;
   font-family:
@@ -53,13 +42,14 @@ body {
 
 .title {
   margin: 0;
-  font-size: 3.75rem;
+  font-size: clamp(2rem, 11vw, 3.75rem);
   font-weight: bold;
   letter-spacing: 0.2em;
 }
 
 .description {
   margin: 0 0 5rem 0;
+  padding: 0 1rem;
 }
 
 .button {
@@ -445,4 +435,20 @@ body.baby .button.link:hover,
 body.baby .button.link:active {
   color: #ecfdff;
   background: #59656f;
+}
+
+/* Phones */
+@media (max-width: 480px) {
+  .button.change-bg {
+    margin: 0 0.5rem;
+  }
+
+  .links {
+    gap: 0.5rem;
+  }
+
+  .button.link {
+    padding: 0.5rem 0.625rem;
+    font-size: 0.9rem;
+  }
 }
