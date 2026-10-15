@@ -1,24 +1,80 @@
+type ShapeName =
+  | 'circle'
+  | 'drop'
+  | 'heart'
+  | 'oval'
+  | 'square'
+  | 'star'
+  | 'triangle'
+  | 'wave';
+
 interface IOptions {
+  /** CSS selector of the canvas element. */
   selector: string;
+  /**
+   * Number of mirrors.
+   * @default 10
+   */
   edge?: number;
-  shapes?: string[];
+  /**
+   * Shapes of the particles.
+   * @default ['square', 'circle', 'wave']
+   */
+  shapes?: readonly ShapeName[];
+  /**
+   * Minimum size of the particles.
+   * @default 30
+   */
   minSize?: number;
+  /**
+   * Maximum size of the particles.
+   * @default 50
+   */
   maxSize?: number;
-  color?: string[];
+  /**
+   * Colors of the particles.
+   * @default ['#FFD1B9', '#564138', '#2E86AB', '#F5F749', '#F24236']
+   */
+  color?: readonly string[];
+  /**
+   * Compositing operation used when drawing the particles.
+   * @default 'overlay'
+   */
   globalCompositeOperation?: GlobalCompositeOperation;
+  /**
+   * Number of particles.
+   * @default 50
+   */
   quantity?: number;
+  /**
+   * Movement speed of the particles, from 0 to 1.
+   * @default 0.3
+   */
   speed?: number;
+  /**
+   * Resolution multiplier of the canvas. Higher values look sharper on
+   * high-DPI screens but cost more to draw.
+   * @default Math.min(window.devicePixelRatio, 2)
+   */
+  pixelRatio?: number;
+  /**
+   * Show a still image instead of animating when the user prefers reduced
+   * motion (`prefers-reduced-motion: reduce`).
+   * @default true
+   */
+  respectReducedMotion?: boolean;
 }
 
 type Options = Required<IOptions>;
 
-const defaults: Omit<Options, 'selector'> = {
+const defaults: Omit<Options, 'selector' | 'pixelRatio'> = {
   color: ['#FFD1B9', '#564138', '#2E86AB', '#F5F749', '#F24236'],
   edge: 10,
   globalCompositeOperation: 'overlay',
   maxSize: 50,
   minSize: 30,
   quantity: 50,
+  respectReducedMotion: true,
   shapes: ['square', 'circle', 'wave'],
   speed: 0.3,
 };
@@ -234,15 +290,21 @@ class Particle {
   private context: CanvasRenderingContext2D;
   private pipe: Pipe;
 
-  private shape: string;
+  private shape: ShapeName;
   private color: string;
   private opacity: number = 0;
   private v: number = 0;
   private radian: number = (2 * Math.PI) / (getRandomInt(6) + 1);
 
-  constructor(context: CanvasRenderingContext2D, options: Options, pipe: Pipe) {
+  constructor(
+    context: CanvasRenderingContext2D,
+    options: Options,
+    pipe: Pipe,
+    opacity = 0,
+  ) {
     this.context = context;
     this.pipe = pipe;
+    this.opacity = opacity;
 
     this.shape = options.shapes[getRandomInt(options.shapes.length)];
     this.size =
@@ -534,18 +596,36 @@ class Plugin {
 
   private element: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
+  private width = 0;
+  private height = 0;
   private animationID: number | null = null;
+  private pausedByUser = false;
+  private reducedMotion: MediaQueryList | null = null;
   private pipe: Pipe;
   private storage: Particle[] = [];
 
   private listenerResize = () => {
     this.resize();
     this.pipe.resize();
+    // Resizing clears the canvas, so redraw it while not animating.
+    if (!this.animationID) this.render();
+  };
+
+  private listenerReducedMotion = () => {
+    if (this.prefersReducedMotion()) {
+      this.stop();
+    } else if (!this.pausedByUser) {
+      this.start();
+    }
   };
 
   // Initialize the plugin with user settings.
   constructor(settings: IOptions) {
-    this.options = { ...defaults, ...settings };
+    this.options = {
+      ...defaults,
+      pixelRatio: Math.min(window.devicePixelRatio || 1, 2),
+      ...settings,
+    };
 
     // Setup the canvas element.
     if (!this.options.selector) {
@@ -571,8 +651,15 @@ class Plugin {
 
     this.initializeEvents();
     this.pipe = new Pipe(this.element, this.context, this.options);
-    this.initializeStorage();
-    this.animate();
+
+    if (this.prefersReducedMotion()) {
+      // Show a still image with fully visible particles.
+      this.initializeStorage(1);
+      this.render();
+    } else {
+      this.initializeStorage(0);
+      this.animate();
+    }
   }
 
   // destroy the plugin.
@@ -582,11 +669,32 @@ class Plugin {
     this.pipe.destroy();
 
     window.removeEventListener('resize', this.listenerResize);
-    if (this.animationID) cancelAnimationFrame(this.animationID);
+    this.reducedMotion?.removeEventListener(
+      'change',
+      this.listenerReducedMotion,
+    );
+    this.stop();
   }
 
   // Pauses/stops the particle animation.
   public pauseAnimation() {
+    this.pausedByUser = true;
+    this.stop();
+  }
+
+  // Restarts the particles animation by calling animate.
+  public resumeAnimation() {
+    this.pausedByUser = false;
+    this.start();
+  }
+
+  private start() {
+    if (!this.animationID) {
+      this.animate();
+    }
+  }
+
+  private stop() {
     if (!this.animationID) {
       return;
     }
@@ -595,51 +703,60 @@ class Plugin {
     this.animationID = null;
   }
 
-  // Restarts the particles animation by calling animate.
-  public resumeAnimation() {
-    if (!this.animationID) {
-      this.animate();
-    }
+  private prefersReducedMotion() {
+    return this.reducedMotion?.matches ?? false;
   }
 
   // Register event listeners.
   private initializeEvents() {
     window.addEventListener('resize', this.listenerResize);
-  }
 
-  // Initialize the particle storage.
-  private initializeStorage() {
-    this.storage = [];
-
-    for (let i = 0; i < this.options.quantity; i += 1) {
-      this.storage.push(new Particle(this.context, this.options, this.pipe));
+    if (
+      this.options.respectReducedMotion &&
+      typeof window.matchMedia === 'function'
+    ) {
+      this.reducedMotion = window.matchMedia(
+        '(prefers-reduced-motion: reduce)',
+      );
+      this.reducedMotion.addEventListener('change', this.listenerReducedMotion);
     }
   }
 
-  // Animates the plugin particles by calling the draw method.
+  // Initialize the particle storage.
+  private initializeStorage(opacity: number) {
+    this.storage = [];
+
+    for (let i = 0; i < this.options.quantity; i += 1) {
+      this.storage.push(
+        new Particle(this.context, this.options, this.pipe, opacity),
+      );
+    }
+  }
+
+  // Animates the plugin particles.
   private animate() {
-    this.draw();
+    this.update();
+    this.render();
     this.animationID = requestAnimationFrame(() => this.animate());
   }
 
-  // Draws the plugin particles.
-  private draw() {
-    const element = this.element;
-    const context = this.context;
-
-    context.globalCompositeOperation = this.options.globalCompositeOperation;
-    context.clearRect(0, 0, element.width, element.height);
-
-    // Update the particles coordinates.
+  // Moves the particles and replaces the ones that left the pipe.
+  private update() {
     this.storage.forEach((particle) => particle.updateCoordinates());
 
-    // Pop the particles what is NOT in the pipe and push the new particles.
     this.storage = this.storage.filter((particle) => particle.isInPipe());
     for (let i = this.storage.length; i < this.options.quantity; i += 1) {
       this.storage.push(new Particle(this.context, this.options, this.pipe));
     }
+  }
 
-    // Draw.
+  // Draws the particles on every mirror.
+  private render() {
+    const context = this.context;
+
+    context.globalCompositeOperation = this.options.globalCompositeOperation;
+    context.clearRect(0, 0, this.width, this.height);
+
     for (let i = 0; i < this.options.edge; i += 1) {
       this.pipe.mirror(i, () => {
         this.storage.forEach((particle) => particle.draw());
@@ -649,19 +766,19 @@ class Plugin {
 
   // Kick off various things on window resize.
   private resize() {
-    this.element.width = this.element.offsetParent
-      ? this.element.offsetParent.clientWidth
-      : this.element.clientWidth;
-    if (
-      this.element.offsetParent &&
-      this.element.offsetParent.nodeName === 'BODY'
-    ) {
-      this.element.height = window.innerHeight;
+    const parent = this.element.offsetParent;
+    this.width = parent ? parent.clientWidth : this.element.clientWidth;
+    if (parent && parent.nodeName === 'BODY') {
+      this.height = window.innerHeight;
     } else {
-      this.element.height = this.element.offsetParent
-        ? this.element.offsetParent.clientHeight
-        : this.element.clientHeight;
+      this.height = parent ? parent.clientHeight : this.element.clientHeight;
     }
+
+    // Draw in CSS pixels on a canvas scaled by the pixel ratio.
+    const ratio = this.options.pixelRatio;
+    this.element.width = Math.round(this.width * ratio);
+    this.element.height = Math.round(this.height * ratio);
+    this.context.setTransform(ratio, 0, 0, ratio, 0, 0);
   }
 }
 
@@ -679,6 +796,11 @@ const Kaleidoscope = function Kaleidoscope(options: IOptions) {
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare namespace Kaleidoscope {
   export type Options = IOptions;
+  export type Shape = ShapeName;
+  export type Instance = Pick<
+    Plugin,
+    'destroy' | 'pauseAnimation' | 'resumeAnimation'
+  >;
 }
 
 export default Kaleidoscope;
