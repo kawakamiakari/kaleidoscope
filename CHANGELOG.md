@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- `shapes` is typed as a union of the available shape names, so typos are caught at compile time.
+- Options have TSDoc comments with their defaults.
+- `Kaleidoscope.Shape` and `Kaleidoscope.Instance` types.
+- `shapes` and `color` accept readonly arrays (e.g. `as const`).
+
 ## 2.0.1 - 2026-10-16
 
 ### Fixed
