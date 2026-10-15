@@ -17,9 +17,9 @@ body {
 
 body {
   margin: 0;
-  font-family: 'Titillium Web', YuGothic, 'Yu Gothic',
-    'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', 'メイリオ', Meiryo,
-    'ＭＳ ゴシック', sans-serif;
+  font-family:
+    'Titillium Web', YuGothic, 'Yu Gothic', 'Hiragino Kaku Gothic ProN',
+    'ヒラギノ角ゴ ProN W3', 'メイリオ', Meiryo, 'ＭＳ ゴシック', sans-serif;
 }
 
 #background {
@@ -144,11 +144,17 @@ body.default {
   background: #fff;
 }
 body.default .title {
-  text-shadow: 2px 2px 0 #fff, -2px 2px 0 #fff, 2px -2px 0 #fff,
+  text-shadow:
+    2px 2px 0 #fff,
+    -2px 2px 0 #fff,
+    2px -2px 0 #fff,
     -2px -2px 0 #fff;
 }
 body.default .description {
-  text-shadow: 1px 1px 0 #fff, -1px 1px 0 #fff, 1px -1px 0 #fff,
+  text-shadow:
+    1px 1px 0 #fff,
+    -1px 1px 0 #fff,
+    1px -1px 0 #fff,
     -1px -1px 0 #fff;
 }
 body.default .button {
@@ -168,11 +174,17 @@ body.valentine {
   background: #f7e1d7;
 }
 body.valentine .title {
-  text-shadow: 2px 2px 0 #f7e1d7, -2px 2px 0 #f7e1d7, 2px -2px 0 #f7e1d7,
+  text-shadow:
+    2px 2px 0 #f7e1d7,
+    -2px 2px 0 #f7e1d7,
+    2px -2px 0 #f7e1d7,
     -2px -2px 0 #f7e1d7;
 }
 body.valentine .description {
-  text-shadow: 1px 1px 0 #f7e1d7, -1px 1px 0 #f7e1d7, 1px -1px 0 #f7e1d7,
+  text-shadow:
+    1px 1px 0 #f7e1d7,
+    -1px 1px 0 #f7e1d7,
+    1px -1px 0 #f7e1d7,
     -1px -1px 0 #f7e1d7;
 }
 body.valentine .button {
@@ -192,11 +204,17 @@ body.garden {
   background: #72b7a6;
 }
 body.garden .title {
-  text-shadow: 2px 2px 0 #72b7a6, -2px 2px 0 #72b7a6, 2px -2px 0 #72b7a6,
+  text-shadow:
+    2px 2px 0 #72b7a6,
+    -2px 2px 0 #72b7a6,
+    2px -2px 0 #72b7a6,
     -2px -2px 0 #72b7a6;
 }
 body.garden .description {
-  text-shadow: 1px 1px 0 #72b7a6, -1px 1px 0 #72b7a6, 1px -1px 0 #72b7a6,
+  text-shadow:
+    1px 1px 0 #72b7a6,
+    -1px 1px 0 #72b7a6,
+    1px -1px 0 #72b7a6,
     -1px -1px 0 #72b7a6;
 }
 body.garden .button {
@@ -216,11 +234,17 @@ body.midnight {
   background: #0a1128;
 }
 body.midnight .title {
-  text-shadow: 2px 2px 0 #0a1128, -2px 2px 0 #0a1128, 2px -2px 0 #0a1128,
+  text-shadow:
+    2px 2px 0 #0a1128,
+    -2px 2px 0 #0a1128,
+    2px -2px 0 #0a1128,
     -2px -2px 0 #0a1128;
 }
 body.midnight .description {
-  text-shadow: 1px 1px 0 #0a1128, -1px 1px 0 #0a1128, 1px -1px 0 #0a1128,
+  text-shadow:
+    1px 1px 0 #0a1128,
+    -1px 1px 0 #0a1128,
+    1px -1px 0 #0a1128,
     -1px -1px 0 #0a1128;
 }
 body.midnight .button {
@@ -240,11 +264,17 @@ body.baby {
   background: #ecfdff;
 }
 body.baby .title {
-  text-shadow: 2px 2px 0 #ecfdff, -2px 2px 0 #ecfdff, 2px -2px 0 #ecfdff,
+  text-shadow:
+    2px 2px 0 #ecfdff,
+    -2px 2px 0 #ecfdff,
+    2px -2px 0 #ecfdff,
     -2px -2px 0 #ecfdff;
 }
 body.baby .description {
-  text-shadow: 1px 1px 0 #ecfdff, -1px 1px 0 #ecfdff, 1px -1px 0 #ecfdff,
+  text-shadow:
+    1px 1px 0 #ecfdff,
+    -1px 1px 0 #ecfdff,
+    1px -1px 0 #ecfdff,
     -1px -1px 0 #ecfdff;
 }
 body.baby .button {
