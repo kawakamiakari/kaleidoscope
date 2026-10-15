@@ -157,10 +157,13 @@ button.button {
 }
 
 .links {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  /* Equal-width columns sized by the widest button. */
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
   gap: 0.75rem;
+  width: max-content;
+  margin-inline: auto;
 }
 
 .get-started {
@@ -168,8 +171,28 @@ button.button {
 }
 
 .toggle {
+  padding: 0.25rem 0.5rem;
+  font: inherit;
   color: inherit;
+  text-shadow:
+    1px 1px 0 var(--bg),
+    -1px 1px 0 var(--bg),
+    1px -1px 0 var(--bg),
+    -1px -1px 0 var(--bg);
   background: transparent;
+  border: none;
+  cursor: pointer;
+}
+.toggle:hover {
+  text-decoration: underline;
+}
+.toggle:focus-visible {
+  outline: currentColor solid 2px;
+  outline-offset: 3px;
+}
+.toggle::after {
+  display: inline-block;
+  margin-left: 0.3em;
 }
 .toggle::after {
   content: '\25BE';
