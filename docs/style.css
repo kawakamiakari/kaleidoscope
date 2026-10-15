@@ -161,7 +161,7 @@ button.button {
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
-  gap: 0.75rem;
+  gap: 1.25rem;
   width: max-content;
   margin-inline: auto;
 }
