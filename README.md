@@ -1,7 +1,7 @@
 # ak-kaleidoscope
 
 [![npm version](https://img.shields.io/npm/v/ak-kaleidoscope.svg)](https://www.npmjs.com/package/ak-kaleidoscope)
-[![Github file size](https://img.shields.io/github/size/kawakamiakari/kaleidoscope/dist/kaleidoscope.min.js.svg)](https://github.com/kawakamiakari/kaleidoscope/blob/master/dist/kaleidoscope.min.js)
+[![minzipped size](https://img.shields.io/bundlephobia/minzip/ak-kaleidoscope.svg)](https://bundlephobia.com/package/ak-kaleidoscope)
 
 ak-kaleidoscope is a lightweight JavaScript plugin for particle backgrounds.
 
@@ -12,22 +12,31 @@ The examples code can be found in the `docs/` folder.
 
 ## Installation
 
-There are several ways to install ak-kaleidoscope:
+### CDN
 
-- [Download the latest version](https://github.com/kawakamiakari/kaleidoscope/archive/master.zip)
-- Install with npm: `npm install ak-kaleidoscope --save`
-
-## Usage
-
-Include the minified JS in your HTML (right befor the closing body tag).
+Include the script in your HTML (right before the closing body tag).
 
 ```html
 <body>
   ...
   <canvas id="kaleidoscope"></canvas>
-  <script src="path/to/kaleidoscope.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ak-kaleidoscope@2/dist/kaleidoscope.min.js"></script>
 </body>
 ```
+
+The minified file is also attached to each [GitHub release](https://github.com/kawakamiakari/kaleidoscope/releases) if you prefer to host it yourself.
+
+### npm
+
+```sh
+npm install ak-kaleidoscope
+```
+
+```javascript
+import Kaleidoscope from 'ak-kaleidoscope';
+```
+
+## Usage
 
 Add a few styles to your css.
 
@@ -38,7 +47,7 @@ body {
   padding: 0;
 }
 
-.kaleidoscope {
+#kaleidoscope {
   position: absolute;
   display: block;
   top: 0;
@@ -49,7 +58,7 @@ body {
 Initialize the plugin on the `window.onload` event.
 
 ```javascript
-window.onload = function() {
+window.onload = function () {
   new Kaleidoscope({
     selector: '#kaleidoscope',
   });
