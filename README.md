@@ -65,6 +65,32 @@ window.onload = function () {
 };
 ```
 
+### ES modules / TypeScript
+
+Type definitions are included. Option types are available as `Kaleidoscope.Options`.
+
+```typescript
+import Kaleidoscope from 'ak-kaleidoscope';
+
+const options: Kaleidoscope.Options = {
+  selector: '#kaleidoscope',
+  shapes: ['heart', 'star'],
+};
+
+const kaleidoscope = new Kaleidoscope(options);
+```
+
+When the canvas is mounted and unmounted dynamically, such as in a component framework, call `destroy()` on unmount to stop the animation and remove the event listeners. For example, in React:
+
+```tsx
+useEffect(() => {
+  const kaleidoscope = new Kaleidoscope({ selector: '#kaleidoscope' });
+  return () => kaleidoscope.destroy();
+}, []);
+```
+
+Note that `destroy()` also removes the canvas element from the DOM.
+
 ## Options
 
 | Option                     | Type            | Default                                                   | Description                                                                                                                                                                                  |
@@ -88,3 +114,13 @@ window.onload = function () {
 | `pauseAnimation`  | Pauses/stops the particle animation |
 | `resumeAnimation` | Continues the particle animation    |
 | `destroy`         | Destroys the plugin                 |
+
+## Migrating from 1.x
+
+- **Browser support**: the build targets ES2018. Internet Explorer is no longer supported.
+- **Where to get the file**: `dist/` is no longer committed to the repository. Load it from a CDN, install it from npm, or download `kaleidoscope.min.js` from the [GitHub releases](https://github.com/kawakamiakari/kaleidoscope/releases).
+- **Errors**: a missing `selector`, or a selector that matches no canvas, now throws an `Error` instead of logging a warning.
+- **Reduced motion**: when the user prefers reduced motion, a still image is shown instead of the animation. Pass `respectReducedMotion: false` to keep the 1.x behavior.
+- **TypeScript**: `shapes` only accepts the shape names listed above, and `globalCompositeOperation` only accepts valid canvas values.
+
+See the [changelog](CHANGELOG.md) for all changes.

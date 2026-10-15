@@ -67,6 +67,17 @@ body {
   transition: 0.25s;
 }
 
+button.button {
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.button:focus-visible {
+  outline: currentColor solid 2px;
+  outline-offset: 3px;
+}
+
 .button.change-bg {
   display: inline-block;
   margin: 0 1.25rem;
@@ -137,6 +148,62 @@ body {
 .button.link .icon {
   width: 1.1rem;
   height: 1.1rem;
+}
+
+.get-started {
+  margin-top: 1.25rem;
+}
+
+.get-started summary {
+  cursor: pointer;
+  list-style: none;
+}
+.get-started summary::-webkit-details-marker {
+  display: none;
+}
+.get-started summary::after {
+  content: ' \25BE';
+}
+.get-started[open] summary::after {
+  content: ' \25B4';
+}
+
+.snippet {
+  position: relative;
+  box-sizing: border-box;
+  max-width: min(40rem, 90vw);
+  margin: 1.25rem auto 0;
+  padding: 1rem 1.25rem;
+  text-align: left;
+  border: currentColor solid 1px;
+  border-radius: 3px;
+  backdrop-filter: blur(25px);
+}
+
+.snippet pre {
+  margin: 0;
+  overflow-x: auto;
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.snippet-note {
+  margin: 0.75rem 0 0;
+  font-size: 0.8rem;
+}
+
+.snippet .copy {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.125rem 0.5rem;
+  font: inherit;
+  font-size: 0.75rem;
+  color: inherit;
+  background: transparent;
+  border: currentColor solid 1px;
+  border-radius: 3px;
+  cursor: pointer;
 }
 
 body.default {

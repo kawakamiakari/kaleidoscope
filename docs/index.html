@@ -31,21 +31,56 @@
           A lightweight JavaScript plugin for particle backgrounds.
         </p>
         <p>
-          <a class="button change-bg def" onclick="showDefault()">
+          <button
+            type="button"
+            class="button change-bg def"
+            onclick="showDefault()"
+            aria-label="Default theme"
+            aria-pressed="true"
+            title="Default"
+          >
             <img class="icon" src="icons/trip_origin-24px.svg" alt="" />
-          </a>
-          <a class="button change-bg val" onclick="showValentine()">
+          </button>
+          <button
+            type="button"
+            class="button change-bg val"
+            onclick="showValentine()"
+            aria-label="Valentine theme"
+            aria-pressed="false"
+            title="Valentine"
+          >
             <img class="icon" src="icons/favorite-24px.svg" alt="" />
-          </a>
-          <a class="button change-bg gar" onclick="showGarden()">
+          </button>
+          <button
+            type="button"
+            class="button change-bg gar"
+            onclick="showGarden()"
+            aria-label="Garden theme"
+            aria-pressed="false"
+            title="Garden"
+          >
             <img class="icon" src="icons/eco-24px.svg" alt="" />
-          </a>
-          <a class="button change-bg mid" onclick="showMidnight()">
+          </button>
+          <button
+            type="button"
+            class="button change-bg mid"
+            onclick="showMidnight()"
+            aria-label="Midnight theme"
+            aria-pressed="false"
+            title="Midnight"
+          >
             <img class="icon" src="icons/nights_stay-24px.svg" alt="" />
-          </a>
-          <a class="button change-bg bab" onclick="showBaby()">
+          </button>
+          <button
+            type="button"
+            class="button change-bg bab"
+            onclick="showBaby()"
+            aria-label="Baby theme"
+            aria-pressed="false"
+            title="Baby"
+          >
             <img class="icon" src="icons/category-24px.svg" alt="" />
-          </a>
+          </button>
         </p>
         <p>
           <a
@@ -57,13 +92,35 @@
           </a>
           <a
             class="button link"
-            href="https://github.com/kawakamiakari/kaleidoscope/archive/master.zip"
-            download
+            href="https://www.npmjs.com/package/ak-kaleidoscope"
+          >
+            <img class="icon" src="icons/package-24px.svg" alt="" />
+            <span id="npm-label">npm</span>
+          </a>
+          <a
+            class="button link"
+            href="https://github.com/kawakamiakari/kaleidoscope/releases/latest/download/kaleidoscope.min.js"
           >
             <img class="icon" src="icons/cloud_download-24px.svg" alt="" />
             Download
           </a>
         </p>
+        <details class="get-started">
+          <summary class="button link">Get started</summary>
+          <div class="snippet">
+            <button type="button" class="copy" onclick="copySnippet(this)">
+              Copy
+            </button>
+            <pre><code id="snippet-code">&lt;canvas id="kaleidoscope"&gt;&lt;/canvas&gt;
+&lt;script src="https://cdn.jsdelivr.net/npm/ak-kaleidoscope@2/dist/kaleidoscope.min.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  new Kaleidoscope({ selector: '#kaleidoscope' });
+&lt;/script&gt;</code></pre>
+            <p class="snippet-note">
+              Or install with npm: <code>npm install ak-kaleidoscope</code>
+            </p>
+          </div>
+        </details>
       </div>
     </div>
 
@@ -78,9 +135,42 @@
         });
       };
 
+      // Show the latest version on the npm button.
+      fetch('https://registry.npmjs.org/ak-kaleidoscope/latest')
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (pkg) {
+          document.querySelector('#npm-label').textContent =
+            'npm v' + pkg.version;
+        })
+        .catch(function () {});
+
+      // Copy the usage snippet to the clipboard.
+      function copySnippet(button) {
+        var code = document.querySelector('#snippet-code').textContent;
+        navigator.clipboard.writeText(code).then(function () {
+          button.textContent = 'Copied!';
+          setTimeout(function () {
+            button.textContent = 'Copy';
+          }, 1500);
+        });
+      }
+
+      // Tell assistive technology which theme is selected.
+      function selectTheme(name) {
+        document.querySelectorAll('.change-bg').forEach(function (button) {
+          button.setAttribute(
+            'aria-pressed',
+            String(button.classList.contains(name)),
+          );
+        });
+      }
+
       // Optional usage.
       function showDefault() {
         kaleidoscope.destroy();
+        selectTheme('def');
 
         var body = document.getElementsByTagName('body')[0];
         body.setAttribute('class', 'default');
@@ -96,6 +186,7 @@
 
       function showValentine() {
         kaleidoscope.destroy();
+        selectTheme('val');
 
         var body = document.getElementsByTagName('body')[0];
         body.setAttribute('class', 'valentine');
@@ -119,6 +210,7 @@
 
       function showGarden() {
         kaleidoscope.destroy();
+        selectTheme('gar');
 
         var body = document.getElementsByTagName('body')[0];
         body.setAttribute('class', 'garden');
@@ -142,6 +234,7 @@
 
       function showMidnight() {
         kaleidoscope.destroy();
+        selectTheme('mid');
 
         var body = document.getElementsByTagName('body')[0];
         body.setAttribute('class', 'midnight');
@@ -165,6 +258,7 @@
 
       function showBaby() {
         kaleidoscope.destroy();
+        selectTheme('bab');
 
         var body = document.getElementsByTagName('body')[0];
         body.setAttribute('class', 'baby');
