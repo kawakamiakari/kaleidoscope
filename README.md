@@ -78,6 +78,8 @@ window.onload = function () {
 | `globalCompositeOperation` | string          | `'overlay'`                                               | _Optional:_ Type of compositing operation to apply when drawing particles. Same as [MDN](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation) |
 | `quantity`                 | number          | `50`                                                      | _Optional:_ Amount of particles                                                                                                                                                              |
 | `speed`                    | number (0 to 1) | `0.3`                                                     | _Optional:_ Movement speed of the particles                                                                                                                                                  |
+| `pixelRatio`               | number          | `Math.min(devicePixelRatio, 2)`                           | _Optional:_ Resolution multiplier of the canvas. Higher values look sharper on high-DPI screens but cost more to draw                                                                        |
+| `respectReducedMotion`     | boolean         | `true`                                                    | _Optional:_ Show a still image instead of animating when the user [prefers reduced motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion)                   |
 
 ## Methods
 
