@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Fixed a memory leak where every new particle added an event listener to the canvas that was never removed.
+
 ## 2.0.0 - 2026-10-16
 
 ### Breaking changes
