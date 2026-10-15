@@ -2,17 +2,6 @@
   "name": "ak-kaleidoscope",
   "version": "1.1.0",
   "description": "A lightweight JavaScript plugin for particle backgrounds.",
-  "main": "dist/kaleidoscope.min.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kawakamiakari/kaleidoscope.git"
-  },
-  "author": "Kawakami Akari <akari.k.c5@gmail.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/kawakamiakari/kaleidoscope/issues"
-  },
-  "homepage": "https://github.com/kawakamiakari/kaleidoscope#readme",
   "keywords": [
     "animation",
     "background",
@@ -21,20 +10,53 @@
     "kaleidoscope",
     "particles"
   ],
+  "homepage": "https://github.com/kawakamiakari/kaleidoscope#readme",
+  "bugs": {
+    "url": "https://github.com/kawakamiakari/kaleidoscope/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kawakamiakari/kaleidoscope.git"
+  },
+  "license": "MIT",
+  "author": "Kawakami Akari (https://github.com/kawakamiakari)",
+  "type": "module",
+  "main": "./dist/kaleidoscope.cjs",
+  "module": "./dist/kaleidoscope.js",
+  "types": "./dist/kaleidoscope.d.ts",
+  "unpkg": "./dist/kaleidoscope.min.js",
+  "jsdelivr": "./dist/kaleidoscope.min.js",
+  "exports": {
+    ".": {
+      "import": "./dist/kaleidoscope.js",
+      "require": "./dist/kaleidoscope.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
-    "build": "gulp",
-    "build:watch": "gulp watch",
-    "lint": "tslint \"src/**/*.ts\""
+    "build": "tsdown && cp dist/kaleidoscope.min.js docs/",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
-    "@types/node": "^13.1.8",
-    "gulp": "^4.0.2",
-    "gulp-clean": "^0.4.0",
-    "gulp-rename": "^2.0.0",
-    "gulp-typescript": "^6.0.0-alpha.1",
-    "gulp-uglify": "^3.0.2",
-    "tslint": "^5.20.1",
-    "tslint-config-airbnb": "^5.11.2",
-    "typescript": "^3.7.5"
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.12.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.10",
+    "tsdown": "^0.23.1",
+    "typescript": "~6.0",
+    "typescript-eslint": "^8.71.2"
   }
 }
