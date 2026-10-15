@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import Kaleidoscope from '../src/kaleidoscope';
 
-const shapes = [
+const shapes: Kaleidoscope.Shape[] = [
   'circle',
   'drop',
   'heart',
@@ -61,6 +61,14 @@ describe('Kaleidoscope', () => {
     expect(a).toBeTypeOf('object');
     expect(b).toBeTypeOf('object');
     expect(a.constructor).toBe(b.constructor);
+  });
+
+  it('types the options', () => {
+    const shapes = ['heart', 'star'] as const;
+    new Kaleidoscope({ selector: '#kaleidoscope', shapes });
+
+    // @ts-expect-error -- unknown shape
+    new Kaleidoscope({ selector: '#kaleidoscope', shapes: ['hexagon'] });
   });
 
   it('throws when the selector is missing', () => {

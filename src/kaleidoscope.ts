@@ -1,12 +1,55 @@
+type ShapeName =
+  | 'circle'
+  | 'drop'
+  | 'heart'
+  | 'oval'
+  | 'square'
+  | 'star'
+  | 'triangle'
+  | 'wave';
+
 interface IOptions {
+  /** CSS selector of the canvas element. */
   selector: string;
+  /**
+   * Number of mirrors.
+   * @default 10
+   */
   edge?: number;
-  shapes?: string[];
+  /**
+   * Shapes of the particles.
+   * @default ['square', 'circle', 'wave']
+   */
+  shapes?: readonly ShapeName[];
+  /**
+   * Minimum size of the particles.
+   * @default 30
+   */
   minSize?: number;
+  /**
+   * Maximum size of the particles.
+   * @default 50
+   */
   maxSize?: number;
-  color?: string[];
+  /**
+   * Colors of the particles.
+   * @default ['#FFD1B9', '#564138', '#2E86AB', '#F5F749', '#F24236']
+   */
+  color?: readonly string[];
+  /**
+   * Compositing operation used when drawing the particles.
+   * @default 'overlay'
+   */
   globalCompositeOperation?: GlobalCompositeOperation;
+  /**
+   * Number of particles.
+   * @default 50
+   */
   quantity?: number;
+  /**
+   * Movement speed of the particles, from 0 to 1.
+   * @default 0.3
+   */
   speed?: number;
 }
 
@@ -234,7 +277,7 @@ class Particle {
   private context: CanvasRenderingContext2D;
   private pipe: Pipe;
 
-  private shape: string;
+  private shape: ShapeName;
   private color: string;
   private opacity: number = 0;
   private v: number = 0;
@@ -679,6 +722,11 @@ const Kaleidoscope = function Kaleidoscope(options: IOptions) {
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare namespace Kaleidoscope {
   export type Options = IOptions;
+  export type Shape = ShapeName;
+  export type Instance = Pick<
+    Plugin,
+    'destroy' | 'pauseAnimation' | 'resumeAnimation'
+  >;
 }
 
 export default Kaleidoscope;
