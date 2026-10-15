@@ -14,6 +14,7 @@ const shapes: Kaleidoscope.Shape[] = [
 
 let frames: FrameRequestCallback[];
 let context: Record<string, unknown>;
+let calls: { name: string; args: unknown[] }[];
 
 // Runs the queued animation frames.
 function tick(count = 1) {
@@ -38,15 +39,41 @@ beforeEach(() => {
   });
   vi.stubGlobal('cancelAnimationFrame', vi.fn());
 
-  // happy-dom has no canvas rendering, so record properties and no-op methods.
+  // happy-dom has no canvas rendering, so record properties and method calls.
   context = {};
+  calls = [];
   const proxy = new Proxy(context, {
-    get: (target, key) => (key in target ? target[key as string] : () => {}),
+    get: (target, key) =>
+      key in target
+        ? target[key as string]
+        : (...args: unknown[]) => calls.push({ name: String(key), args }),
   });
   vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(
     proxy as unknown as CanvasRenderingContext2D,
   );
 });
+
+// Mocks the prefers-reduced-motion media query and returns a setter for it.
+function mockReducedMotion(initial: boolean) {
+  const listeners: (() => void)[] = [];
+  const query = {
+    matches: initial,
+    addEventListener: (_type: string, listener: () => void) =>
+      listeners.push(listener),
+    removeEventListener: vi.fn(),
+  };
+  vi.spyOn(window, 'matchMedia').mockReturnValue(
+    query as unknown as MediaQueryList,
+  );
+  return (matches: boolean) => {
+    query.matches = matches;
+    listeners.forEach((listener) => listener());
+  };
+}
+
+function called(name: string) {
+  return calls.some((call) => call.name === name);
+}
 
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -162,5 +189,87 @@ describe('Kaleidoscope', () => {
       'mousemove',
       expect.any(Function),
     );
+  });
+
+  describe('pixel ratio', () => {
+    it('scales the canvas by devicePixelRatio, up to 2', () => {
+      vi.spyOn(window, 'devicePixelRatio', 'get').mockReturnValue(3);
+      new Kaleidoscope({ selector: '#kaleidoscope' });
+      const canvas = document.querySelector(
+        '#kaleidoscope',
+      ) as HTMLCanvasElement;
+
+      expect(canvas.width).toBe(1600);
+      expect(canvas.height).toBe(1200);
+      expect(calls).toContainEqual({
+        name: 'setTransform',
+        args: [2, 0, 0, 2, 0, 0],
+      });
+    });
+
+    it('uses the pixelRatio option', () => {
+      vi.spyOn(window, 'devicePixelRatio', 'get').mockReturnValue(3);
+      new Kaleidoscope({ selector: '#kaleidoscope', pixelRatio: 1 });
+      const canvas = document.querySelector(
+        '#kaleidoscope',
+      ) as HTMLCanvasElement;
+
+      expect(canvas.width).toBe(800);
+      expect(canvas.height).toBe(600);
+    });
+  });
+
+  describe('reduced motion', () => {
+    it('draws a still image without animating', () => {
+      mockReducedMotion(true);
+      new Kaleidoscope({ selector: '#kaleidoscope' });
+
+      expect(frames).toHaveLength(0);
+      expect(called('clearRect')).toBe(true);
+      expect(called('fill') || called('stroke')).toBe(true);
+    });
+
+    it('follows changes of the preference', () => {
+      const setReducedMotion = mockReducedMotion(true);
+      new Kaleidoscope({ selector: '#kaleidoscope' });
+
+      setReducedMotion(false);
+      expect(frames).toHaveLength(1);
+
+      setReducedMotion(true);
+      expect(cancelAnimationFrame).toHaveBeenCalled();
+    });
+
+    it('stays paused when paused by the user', () => {
+      const setReducedMotion = mockReducedMotion(false);
+      const kaleidoscope = new Kaleidoscope({ selector: '#kaleidoscope' });
+      kaleidoscope.pauseAnimation();
+      frames = [];
+
+      setReducedMotion(true);
+      setReducedMotion(false);
+
+      expect(frames).toHaveLength(0);
+    });
+
+    it('can be ignored with respectReducedMotion: false', () => {
+      mockReducedMotion(true);
+      new Kaleidoscope({
+        selector: '#kaleidoscope',
+        respectReducedMotion: false,
+      });
+
+      expect(frames).toHaveLength(1);
+    });
+  });
+
+  it('redraws on resize while paused', () => {
+    const kaleidoscope = new Kaleidoscope({ selector: '#kaleidoscope' });
+    kaleidoscope.pauseAnimation();
+    calls = [];
+
+    window.dispatchEvent(new Event('resize'));
+
+    expect(called('clearRect')).toBe(true);
   });
 });

@@ -8,6 +8,12 @@
 - Options have TSDoc comments with their defaults.
 - `Kaleidoscope.Shape` and `Kaleidoscope.Instance` types.
 - `shapes` and `color` accept readonly arrays (e.g. `as const`).
+- Sharp rendering on high-DPI screens. The canvas is scaled by `devicePixelRatio` (up to 2 by default), configurable with the new `pixelRatio` option.
+- Respects `prefers-reduced-motion`: shows a still image instead of animating, and follows changes of the setting. Disable with `respectReducedMotion: false`.
+
+### Fixed
+
+- The canvas no longer goes blank when the window is resized while the animation is paused.
 
 ## 2.0.1 - 2026-10-16
 
