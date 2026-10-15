@@ -19,7 +19,7 @@
     "url": "git+https://github.com/kawakamiakari/kaleidoscope.git"
   },
   "license": "MIT",
-  "author": "Kawakami Akari <akari.k.c5@gmail.com>",
+  "author": "Kawakami Akari (https://github.com/kawakamiakari)",
   "type": "module",
   "main": "./dist/kaleidoscope.cjs",
   "module": "./dist/kaleidoscope.js",
