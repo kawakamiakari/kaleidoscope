@@ -26,6 +26,10 @@ function tick(count = 1) {
 
 beforeEach(() => {
   document.body.innerHTML = '<canvas id="kaleidoscope"></canvas>';
+  // happy-dom has no layout, so give the canvas a size.
+  const canvas = document.querySelector('#kaleidoscope') as HTMLElement;
+  Object.defineProperty(canvas, 'clientWidth', { value: 800 });
+  Object.defineProperty(canvas, 'clientHeight', { value: 600 });
 
   frames = [];
   vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
@@ -83,6 +87,35 @@ describe('Kaleidoscope', () => {
     new Kaleidoscope({ selector: '#kaleidoscope', shapes });
 
     expect(() => tick(100)).not.toThrow();
+  });
+
+  it('does not add listeners as particles are replaced', () => {
+    const canvas = document.querySelector('#kaleidoscope') as HTMLCanvasElement;
+    const addEventListener = vi.spyOn(canvas, 'addEventListener');
+    new Kaleidoscope({ selector: '#kaleidoscope', quantity: 10 });
+
+    tick(100);
+
+    expect(addEventListener).not.toHaveBeenCalled();
+  });
+
+  it('moves particles toward the mouse', () => {
+    const kaleidoscope = new Kaleidoscope({
+      selector: '#kaleidoscope',
+      quantity: 1,
+    });
+    const particle = () =>
+      (kaleidoscope as unknown as { storage: { x: number; y: number }[] })
+        .storage[0];
+    const before = { ...particle() };
+
+    window.dispatchEvent(
+      new MouseEvent('mousemove', { clientX: -1000, clientY: -1000 }),
+    );
+    tick();
+
+    expect(particle().x).toBeLessThan(before.x);
+    expect(particle().y).toBeLessThan(before.y);
   });
 
   it('applies globalCompositeOperation', () => {

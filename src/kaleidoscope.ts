@@ -71,8 +71,6 @@ class Pipe {
 
     this.directionX = (event.clientX - this.pointO.x) / unit;
     this.directionY = (event.clientY - this.pointO.y) / unit;
-
-    this.canvas.dispatchEvent(new Event('change:direction'));
   };
 
   constructor(
@@ -233,7 +231,6 @@ class Particle {
   public x: number = 0;
   public y: number = 0;
 
-  private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
   private pipe: Pipe;
 
@@ -242,16 +239,8 @@ class Particle {
   private opacity: number = 0;
   private v: number = 0;
   private radian: number = (2 * Math.PI) / (getRandomInt(6) + 1);
-  private directionX: number = 0;
-  private directionY: number = 0;
 
-  constructor(
-    canvas: HTMLCanvasElement,
-    context: CanvasRenderingContext2D,
-    options: Options,
-    pipe: Pipe,
-  ) {
-    this.canvas = canvas;
+  constructor(context: CanvasRenderingContext2D, options: Options, pipe: Pipe) {
     this.context = context;
     this.pipe = pipe;
 
@@ -263,10 +252,6 @@ class Particle {
     this.x = p.x;
     this.y = p.y;
     this.v = (Math.random() + 0.5) * options.speed;
-    this.directionX = pipe.directionX;
-    this.directionY = pipe.directionY;
-
-    this.initializeEvents();
   }
 
   // The particles draw function.
@@ -527,9 +512,11 @@ class Particle {
       this.opacity += 0.1;
     }
 
-    if (this.directionX && this.directionY) {
-      this.x += this.v * this.directionX;
-      this.y += this.v * this.directionY;
+    // Follow the mouse direction tracked by the pipe.
+    const { directionX, directionY } = this.pipe;
+    if (directionX && directionY) {
+      this.x += this.v * directionX;
+      this.y += this.v * directionY;
     } else {
       this.y += this.v;
     }
@@ -539,14 +526,6 @@ class Particle {
 
   public isInPipe() {
     return this.pipe.isIn(this);
-  }
-
-  // Register event listeners.
-  private initializeEvents() {
-    this.canvas.addEventListener('change:direction', () => {
-      this.directionX = this.pipe.directionX;
-      this.directionY = this.pipe.directionY;
-    });
   }
 }
 
@@ -633,9 +612,7 @@ class Plugin {
     this.storage = [];
 
     for (let i = 0; i < this.options.quantity; i += 1) {
-      this.storage.push(
-        new Particle(this.element, this.context, this.options, this.pipe),
-      );
+      this.storage.push(new Particle(this.context, this.options, this.pipe));
     }
   }
 
@@ -659,9 +636,7 @@ class Plugin {
     // Pop the particles what is NOT in the pipe and push the new particles.
     this.storage = this.storage.filter((particle) => particle.isInPipe());
     for (let i = this.storage.length; i < this.options.quantity; i += 1) {
-      this.storage.push(
-        new Particle(this.element, this.context, this.options, this.pipe),
-      );
+      this.storage.push(new Particle(this.context, this.options, this.pipe));
     }
 
     // Draw.
