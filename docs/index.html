@@ -82,7 +82,7 @@
             <img class="icon" src="icons/category-24px.svg" alt="" />
           </button>
         </p>
-        <p>
+        <p class="links">
           <a
             class="button link"
             href="https://github.com/kawakamiakari/kaleidoscope"
@@ -105,25 +105,41 @@
             Download
           </a>
         </p>
-        <details class="get-started">
-          <summary class="button link">Get started</summary>
-          <div class="snippet">
-            <div class="snippet-header">
-              <span>Add to your HTML</span>
-              <button type="button" class="copy" onclick="copySnippet(this)">
-                Copy
-              </button>
-            </div>
-            <pre><code id="snippet-code">&lt;canvas id="kaleidoscope"&gt;&lt;/canvas&gt;
+        <div class="get-started">
+          <button
+            type="button"
+            class="button link toggle"
+            aria-expanded="false"
+            aria-controls="snippet-panel"
+            onclick="toggleSnippet(this)"
+          >
+            Get started
+          </button>
+          <div class="snippet-panel" id="snippet-panel">
+            <div class="snippet-panel-inner">
+              <div class="snippet">
+                <div class="snippet-header">
+                  <span>Add to your HTML</span>
+                  <button
+                    type="button"
+                    class="copy"
+                    onclick="copySnippet(this)"
+                  >
+                    Copy
+                  </button>
+                </div>
+                <pre><code id="snippet-code">&lt;canvas id="kaleidoscope"&gt;&lt;/canvas&gt;
 &lt;script src="https://cdn.jsdelivr.net/npm/ak-kaleidoscope@2/dist/kaleidoscope.min.js"&gt;&lt;/script&gt;
 &lt;script&gt;
   new Kaleidoscope({ selector: '#kaleidoscope' });
 &lt;/script&gt;</code></pre>
-            <p class="snippet-note">
-              Or install with npm: <code>npm install ak-kaleidoscope</code>
-            </p>
+                <p class="snippet-note">
+                  Or install with npm: <code>npm install ak-kaleidoscope</code>
+                </p>
+              </div>
+            </div>
           </div>
-        </details>
+        </div>
       </div>
     </div>
 
@@ -148,6 +164,13 @@
             'npm v' + pkg.version;
         })
         .catch(function () {});
+
+      // Open or close the usage snippet.
+      function toggleSnippet(button) {
+        var open = button.getAttribute('aria-expanded') !== 'true';
+        button.setAttribute('aria-expanded', String(open));
+        document.querySelector('#snippet-panel').classList.toggle('open', open);
+      }
 
       // Copy the usage snippet to the clipboard.
       function copySnippet(button) {

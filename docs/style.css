@@ -141,9 +141,7 @@ button.button {
   gap: 0.3em;
   justify-content: center;
   align-items: center;
-  min-width: 9rem;
-  margin: 0 1.25rem;
-  padding: 0.625rem;
+  padding: 0.5rem 0.875rem;
   text-align: center;
   font-size: 1.1rem;
   text-shadow: none;
@@ -158,22 +156,50 @@ button.button {
   height: 1.1rem;
 }
 
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
 .get-started {
   margin-top: 1.25rem;
 }
 
-.get-started summary {
-  cursor: pointer;
-  list-style: none;
+.toggle {
+  color: inherit;
+  background: transparent;
 }
-.get-started summary::-webkit-details-marker {
-  display: none;
+.toggle::after {
+  content: '\25BE';
+  transition: transform 0.3s ease;
 }
-.get-started summary::after {
-  content: ' \25BE';
+.toggle[aria-expanded='true']::after {
+  transform: rotate(180deg);
 }
-.get-started[open] summary::after {
-  content: ' \25B4';
+
+/* Collapsible panel: animate the row height from 0 to its content. */
+.snippet-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition:
+    grid-template-rows 0.3s ease,
+    visibility 0s 0.3s;
+}
+.snippet-panel.open {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition:
+    grid-template-rows 0.3s ease,
+    visibility 0s;
+}
+.snippet-panel-inner {
+  min-height: 0;
+  /* Room so the clipping doesn't cut the blurred panel's bottom border. */
+  padding-bottom: 2px;
+  overflow: hidden;
 }
 
 .snippet {
@@ -182,10 +208,23 @@ button.button {
   margin: 1.25rem auto 0;
   overflow: hidden;
   text-align: left;
-  background: color-mix(in srgb, var(--bg) 85%, transparent);
   border: currentColor solid 1px;
   border-radius: 3px;
   backdrop-filter: blur(25px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.snippet-panel.open .snippet {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle::after,
+  .snippet-panel,
+  .snippet-panel.open,
+  .snippet {
+    transition: none;
+  }
 }
 
 .snippet-header {
@@ -203,7 +242,7 @@ button.button {
   overflow-x: auto;
   font-size: 0.8rem;
   line-height: 1.6;
-  background: color-mix(in srgb, currentColor 8%, transparent);
+  background: color-mix(in srgb, var(--fg) 8%, var(--bg));
 }
 
 .snippet-note {
