@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Every shape now rotates around its own center. Previously `oval` circled around a nearby point and `star` turned around a point near its bottom.
+
 ## 2.1.0 - 2026-10-16
 
 ### Added
