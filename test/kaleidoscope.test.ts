@@ -38,6 +38,13 @@ beforeEach(() => {
     return frames.length;
   });
   vi.stubGlobal('cancelAnimationFrame', vi.fn());
+  // happy-dom has no Path2D.
+  vi.stubGlobal(
+    'Path2D',
+    class {
+      constructor(public d: string) {}
+    },
+  );
 
   // happy-dom has no canvas rendering, so record properties and method calls.
   context = {};
@@ -96,6 +103,16 @@ describe('Kaleidoscope', () => {
 
     // @ts-expect-error -- unknown shape
     new Kaleidoscope({ selector: '#kaleidoscope', shapes: ['hexagon'] });
+
+    const custom: Kaleidoscope.ShapeDefinition[] = [
+      { path: 'M0 0 L24 24' },
+      { path: 'M0 0', viewBox: '0 0 10 10', style: 'stroke', lineWidth: 2 },
+      (context, size) => context.fillRect(0, 0, size, size),
+    ];
+    new Kaleidoscope({
+      selector: '#kaleidoscope',
+      shapes: ['circle', ...custom],
+    });
   });
 
   it('throws when the selector is missing', () => {
@@ -271,5 +288,60 @@ describe('Kaleidoscope', () => {
     window.dispatchEvent(new Event('resize'));
 
     expect(called('clearRect')).toBe(true);
+  });
+
+  describe('custom shapes', () => {
+    // Creates an instance drawing one shape at a fixed size and returns the
+    // canvas calls made while drawing a frame.
+    function drawShape(shape: Kaleidoscope.ShapeDefinition, size = 48) {
+      new Kaleidoscope({
+        selector: '#kaleidoscope',
+        shapes: [shape],
+        minSize: size,
+        maxSize: size,
+        quantity: 1,
+        edge: 1,
+      });
+      calls = [];
+      tick();
+      return calls;
+    }
+
+    it('fills an SVG path scaled to the particle size', () => {
+      const drawn = drawShape({ path: 'M2 2 L22 22' });
+
+      expect(drawn).toContainEqual({ name: 'scale', args: [2, 2] });
+      expect(drawn).toContainEqual({ name: 'translate', args: [-12, -12] });
+      const fill = drawn.find((call) => call.name === 'fill');
+      expect(fill?.args[0]).toEqual({ d: 'M2 2 L22 22' });
+    });
+
+    it('fits a viewBox string, centered', () => {
+      const drawn = drawShape({ path: 'M0 0', viewBox: '0 0 96 48' });
+
+      expect(drawn).toContainEqual({ name: 'scale', args: [0.5, 0.5] });
+      expect(drawn).toContainEqual({ name: 'translate', args: [-48, -24] });
+    });
+
+    it('strokes a path', () => {
+      const drawn = drawShape({ path: 'M0 0', style: 'stroke' });
+
+      expect(drawn.some((call) => call.name === 'stroke')).toBe(true);
+      expect(drawn.some((call) => call.name === 'fill')).toBe(false);
+      expect(context.lineWidth).toBe(2.4);
+    });
+
+    it('uses lineWidth for strokes', () => {
+      drawShape({ path: 'M0 0', style: 'stroke', lineWidth: 3 });
+
+      expect(context.lineWidth).toBe(3);
+    });
+
+    it('calls a drawing function with the context and size', () => {
+      const shape = vi.fn();
+      drawShape(shape, 40);
+
+      expect(shape).toHaveBeenCalledWith(expect.anything(), 40);
+    });
   });
 });

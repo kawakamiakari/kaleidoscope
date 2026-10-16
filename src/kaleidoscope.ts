@@ -1,12 +1,9 @@
-type ShapeName =
-  | 'circle'
-  | 'drop'
-  | 'heart'
-  | 'oval'
-  | 'square'
-  | 'star'
-  | 'triangle'
-  | 'wave';
+import {
+  resolveShape,
+  type ShapeDefinition,
+  type ShapeDrawer,
+  type ShapeName,
+} from './shapes';
 
 interface IOptions {
   /** CSS selector of the canvas element. */
@@ -17,10 +14,11 @@ interface IOptions {
    */
   edge?: number;
   /**
-   * Shapes of the particles.
+   * Shapes of the particles: built-in shape names, SVG path definitions
+   * (`{ path: 'M…' }`) or drawing functions.
    * @default ['square', 'circle', 'wave']
    */
-  shapes?: readonly ShapeName[];
+  shapes?: readonly (ShapeName | ShapeDefinition)[];
   /**
    * Minimum size of the particles.
    * @default 30
@@ -290,7 +288,7 @@ class Particle {
   private context: CanvasRenderingContext2D;
   private pipe: Pipe;
 
-  private shape: ShapeName;
+  private drawShape: ShapeDrawer;
   private color: string;
   private opacity: number = 0;
   private v: number = 0;
@@ -300,13 +298,14 @@ class Particle {
     context: CanvasRenderingContext2D,
     options: Options,
     pipe: Pipe,
+    shapes: readonly ShapeDrawer[],
     opacity = 0,
   ) {
     this.context = context;
     this.pipe = pipe;
     this.opacity = opacity;
 
-    this.shape = options.shapes[getRandomInt(options.shapes.length)];
+    this.drawShape = shapes[getRandomInt(shapes.length)];
     this.size =
       getRandomInt(options.maxSize - options.minSize) + options.minSize;
     this.color = options.color[getRandomInt(options.color.length)];
@@ -316,256 +315,17 @@ class Particle {
     this.v = (Math.random() + 0.5) * options.speed;
   }
 
-  // The particles draw function.
+  // Draws the particle centered on (x, y).
   public draw() {
     const context = this.context;
-    switch (this.shape) {
-      case 'circle':
-        context.save();
-
-        // Settings
-        context.fillStyle = this.color;
-        context.globalAlpha = this.opacity;
-
-        // Draw
-        context.beginPath();
-        context.arc(this.x, this.y, this.size / 2, 0, 2 * Math.PI, false);
-        context.closePath();
-        context.fill();
-
-        context.restore();
-        break;
-      case 'drop':
-        context.save();
-
-        // Settings
-        context.fillStyle = this.color;
-        context.globalAlpha = this.opacity;
-
-        // Rotate
-        context.translate(this.x + this.size / 3, this.y + this.size / 2);
-        context.rotate(this.radian);
-        context.translate(-(this.size / 3), -(this.size / 2));
-
-        // Draw
-        context.beginPath();
-        context.moveTo(0, this.size * (2 / 3));
-        context.quadraticCurveTo(0, this.size / 3, this.size / 3, 0);
-        context.quadraticCurveTo(
-          this.size * (2 / 3),
-          this.size * (1 / 3),
-          this.size * (2 / 3),
-          this.size * (2 / 3),
-        );
-        context.arc(
-          this.size * (1 / 3),
-          this.size * (2 / 3),
-          this.size * (1 / 3),
-          0,
-          Math.PI,
-          false,
-        );
-        context.closePath();
-        context.fill();
-
-        context.restore();
-        break;
-      case 'heart':
-        context.save();
-
-        // Settings
-        context.fillStyle = this.color;
-        context.globalAlpha = this.opacity;
-
-        // Rotate
-        context.translate(this.x + this.size / 2, this.y + this.size / 2);
-        context.rotate(this.radian);
-        context.translate(-(this.size / 2), -(this.size / 2));
-
-        // Draw
-        context.beginPath();
-        context.moveTo(this.size * (75 / 130), this.size * (40 / 140));
-        context.bezierCurveTo(
-          this.size * (75 / 130),
-          this.size * (37 / 140),
-          this.size * (70 / 130),
-          this.size * (25 / 140),
-          this.size * (50 / 130),
-          this.size * (25 / 140),
-        );
-        context.bezierCurveTo(
-          this.size * (20 / 130),
-          this.size * (25 / 140),
-          this.size * (20 / 130),
-          this.size * (62.5 / 140),
-          this.size * (20 / 130),
-          this.size * (62.5 / 140),
-        );
-        context.bezierCurveTo(
-          this.size * (20 / 130),
-          this.size * (80 / 140),
-          this.size * (40 / 130),
-          this.size * (102 / 140),
-          this.size * (75 / 130),
-          this.size * (120 / 140),
-        );
-        context.bezierCurveTo(
-          this.size * (110 / 130),
-          this.size * (102 / 140),
-          this.size,
-          this.size * (80 / 140),
-          this.size,
-          this.size * (62.5 / 140),
-        );
-        context.bezierCurveTo(
-          this.size,
-          this.size * (62.5 / 140),
-          this.size,
-          this.size * (25 / 140),
-          this.size * (100 / 130),
-          this.size * (25 / 140),
-        );
-        context.bezierCurveTo(
-          this.size * (85 / 130),
-          this.size * (25 / 140),
-          this.size * (75 / 130),
-          this.size * (37 / 140),
-          this.size * (75 / 130),
-          this.size * (40 / 140),
-        );
-        context.fill();
-
-        context.restore();
-        break;
-      case 'oval':
-        context.save();
-
-        // Settings
-        context.fillStyle = this.color;
-        context.globalAlpha = this.opacity;
-
-        // Rotate
-        context.translate(this.x + this.size / 2, this.y + this.size / 2);
-        context.rotate(this.radian);
-        context.scale(1, 3 / 4);
-        context.translate(-(this.size / 2), -(this.size / 2));
-
-        // Draw
-        context.beginPath();
-        context.arc(0, 0, this.size / 2, 0, 2 * Math.PI, false);
-        context.closePath();
-        context.fill();
-
-        context.restore();
-        break;
-      case 'square':
-        context.save();
-
-        // Settings
-        context.fillStyle = this.color;
-        context.globalAlpha = this.opacity;
-
-        // Rotate
-        context.translate(this.x + this.size / 2, this.y + this.size / 2);
-        context.rotate(this.radian);
-        context.translate(-(this.size / 2), -(this.size / 2));
-
-        // Draw
-        context.beginPath();
-        context.rect(0, 0, this.size, this.size);
-        context.closePath();
-        context.fill();
-
-        context.restore();
-        break;
-      case 'star':
-        context.save();
-
-        // Settings
-        context.fillStyle = this.color;
-        context.globalAlpha = this.opacity;
-
-        // Rotate
-        context.translate(
-          this.x + this.size / 2,
-          this.y + this.size * (9 / 10),
-        );
-        context.rotate(this.radian);
-        context.translate(-(this.size / 2), -(this.size * (9 / 10)));
-
-        // Draw
-        context.beginPath();
-        context.moveTo(0, this.size * (70 / 200));
-        context.lineTo(this.size, this.size * (70 / 200));
-        context.lineTo(this.size * (35 / 200), this.size * (180 / 200));
-        context.lineTo(this.size * (100 / 200), 0);
-        context.lineTo(this.size * (165 / 200), this.size * (180 / 200));
-        context.closePath();
-        context.fill();
-
-        context.restore();
-        break;
-      case 'triangle':
-        context.save();
-
-        // Settings
-        context.fillStyle = this.color;
-        context.globalAlpha = this.opacity;
-
-        // Rotate
-        context.translate(
-          this.x + this.size / 2,
-          this.y + (1 - Math.tan(Math.PI / 6) / 2) * this.size,
-        );
-        context.rotate(this.radian);
-        context.translate(
-          -(this.size / 2),
-          -((1 - Math.tan(Math.PI / 6) / 2) * this.size),
-        );
-
-        // Draw
-        context.beginPath();
-        context.moveTo(0, this.size);
-        context.lineTo(
-          this.size / 2,
-          (1 - Math.tan(Math.PI / 3) / 2) * this.size,
-        );
-        context.lineTo(this.size, this.size);
-        context.closePath();
-        context.fill();
-
-        context.restore();
-        break;
-      case 'wave':
-        context.save();
-
-        // Settings
-        context.strokeStyle = this.color;
-        context.globalAlpha = this.opacity;
-        context.lineWidth = this.size * 0.3;
-        context.lineJoin = 'round';
-        context.lineCap = 'round';
-
-        // Rotate
-        context.translate(this.x + this.size * 0.5, this.y + this.size * 0.2);
-        context.rotate(this.radian);
-        context.translate(-(this.size * 0.5), -(this.size * 0.2));
-
-        // Draw
-        context.beginPath();
-        context.moveTo(0, 0);
-        context.lineTo(this.size * 0.2, this.size * 0.4);
-        context.lineTo(this.size * 0.4, 0);
-        context.lineTo(this.size * 0.6, this.size * 0.4);
-        context.lineTo(this.size * 0.8, 0);
-        context.lineTo(this.size, this.size * 0.4);
-        context.stroke();
-
-        context.restore();
-        break;
-      default:
-        break;
-    }
+    context.save();
+    context.translate(this.x, this.y);
+    context.rotate(this.radian);
+    context.globalAlpha = this.opacity;
+    context.fillStyle = this.color;
+    context.strokeStyle = this.color;
+    this.drawShape(context, this.size);
+    context.restore();
   }
 
   // This updates the particles coordinates.
@@ -602,6 +362,7 @@ class Plugin {
   private pausedByUser = false;
   private reducedMotion: MediaQueryList | null = null;
   private pipe: Pipe;
+  private shapes: ShapeDrawer[];
   private storage: Particle[] = [];
 
   private listenerResize = () => {
@@ -651,6 +412,7 @@ class Plugin {
 
     this.initializeEvents();
     this.pipe = new Pipe(this.element, this.context, this.options);
+    this.shapes = this.options.shapes.map(resolveShape);
 
     if (this.prefersReducedMotion()) {
       // Show a still image with fully visible particles.
@@ -728,7 +490,13 @@ class Plugin {
 
     for (let i = 0; i < this.options.quantity; i += 1) {
       this.storage.push(
-        new Particle(this.context, this.options, this.pipe, opacity),
+        new Particle(
+          this.context,
+          this.options,
+          this.pipe,
+          this.shapes,
+          opacity,
+        ),
       );
     }
   }
@@ -746,7 +514,9 @@ class Plugin {
 
     this.storage = this.storage.filter((particle) => particle.isInPipe());
     for (let i = this.storage.length; i < this.options.quantity; i += 1) {
-      this.storage.push(new Particle(this.context, this.options, this.pipe));
+      this.storage.push(
+        new Particle(this.context, this.options, this.pipe, this.shapes),
+      );
     }
   }
 
@@ -782,6 +552,9 @@ class Plugin {
   }
 }
 
+// Aliased so the namespace member below doesn't refer to itself.
+type CustomShape = ShapeDefinition;
+
 interface KaleidoscopeFactory {
   new (options: IOptions): Plugin;
   (options: IOptions): Plugin;
@@ -797,6 +570,7 @@ const Kaleidoscope = function Kaleidoscope(options: IOptions) {
 declare namespace Kaleidoscope {
   export type Options = IOptions;
   export type Shape = ShapeName;
+  export type ShapeDefinition = CustomShape;
   export type Instance = Pick<
     Plugin,
     'destroy' | 'pauseAnimation' | 'resumeAnimation'
