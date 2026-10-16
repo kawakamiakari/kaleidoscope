@@ -166,6 +166,7 @@ button.button {
   backdrop-filter: blur(25px);
 }
 
+/* Inline SVG icons use the text color, so they follow the theme. */
 .button.link .icon {
   display: block;
   width: 1.1rem;
