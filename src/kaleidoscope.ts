@@ -1,4 +1,9 @@
-import { builtInShapes, type ShapeDrawer, type ShapeName } from './shapes';
+import {
+  resolveShape,
+  type ShapeDefinition,
+  type ShapeDrawer,
+  type ShapeName,
+} from './shapes';
 
 interface IOptions {
   /** CSS selector of the canvas element. */
@@ -9,10 +14,11 @@ interface IOptions {
    */
   edge?: number;
   /**
-   * Shapes of the particles.
+   * Shapes of the particles: built-in shape names, SVG path definitions
+   * (`{ path: 'M…' }`) or drawing functions.
    * @default ['square', 'circle', 'wave']
    */
-  shapes?: readonly ShapeName[];
+  shapes?: readonly (ShapeName | ShapeDefinition)[];
   /**
    * Minimum size of the particles.
    * @default 30
@@ -292,16 +298,14 @@ class Particle {
     context: CanvasRenderingContext2D,
     options: Options,
     pipe: Pipe,
+    shapes: readonly ShapeDrawer[],
     opacity = 0,
   ) {
     this.context = context;
     this.pipe = pipe;
     this.opacity = opacity;
 
-    // Unknown names (e.g. typos from JavaScript) draw nothing, as before.
-    this.drawShape =
-      builtInShapes[options.shapes[getRandomInt(options.shapes.length)]] ??
-      (() => {});
+    this.drawShape = shapes[getRandomInt(shapes.length)];
     this.size =
       getRandomInt(options.maxSize - options.minSize) + options.minSize;
     this.color = options.color[getRandomInt(options.color.length)];
@@ -358,6 +362,7 @@ class Plugin {
   private pausedByUser = false;
   private reducedMotion: MediaQueryList | null = null;
   private pipe: Pipe;
+  private shapes: ShapeDrawer[];
   private storage: Particle[] = [];
 
   private listenerResize = () => {
@@ -407,6 +412,7 @@ class Plugin {
 
     this.initializeEvents();
     this.pipe = new Pipe(this.element, this.context, this.options);
+    this.shapes = this.options.shapes.map(resolveShape);
 
     if (this.prefersReducedMotion()) {
       // Show a still image with fully visible particles.
@@ -484,7 +490,13 @@ class Plugin {
 
     for (let i = 0; i < this.options.quantity; i += 1) {
       this.storage.push(
-        new Particle(this.context, this.options, this.pipe, opacity),
+        new Particle(
+          this.context,
+          this.options,
+          this.pipe,
+          this.shapes,
+          opacity,
+        ),
       );
     }
   }
@@ -502,7 +514,9 @@ class Plugin {
 
     this.storage = this.storage.filter((particle) => particle.isInPipe());
     for (let i = this.storage.length; i < this.options.quantity; i += 1) {
-      this.storage.push(new Particle(this.context, this.options, this.pipe));
+      this.storage.push(
+        new Particle(this.context, this.options, this.pipe, this.shapes),
+      );
     }
   }
 
@@ -538,6 +552,9 @@ class Plugin {
   }
 }
 
+// Aliased so the namespace member below doesn't refer to itself.
+type CustomShape = ShapeDefinition;
+
 interface KaleidoscopeFactory {
   new (options: IOptions): Plugin;
   (options: IOptions): Plugin;
@@ -553,6 +570,7 @@ const Kaleidoscope = function Kaleidoscope(options: IOptions) {
 declare namespace Kaleidoscope {
   export type Options = IOptions;
   export type Shape = ShapeName;
+  export type ShapeDefinition = CustomShape;
   export type Instance = Pick<
     Plugin,
     'destroy' | 'pauseAnimation' | 'resumeAnimation'

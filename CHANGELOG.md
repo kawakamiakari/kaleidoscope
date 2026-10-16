@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Added
+
+- Custom shapes: `shapes` accepts SVG path definitions (`{ path, viewBox, style, lineWidth }`) and drawing functions besides the built-in names. See "Custom shapes" in the README.
+- `Kaleidoscope.ShapeDefinition` type.
+
 ### Changed
 
 - Every shape now rotates around its own center. Previously `oval` circled around a nearby point and `star` turned around a point near its bottom.

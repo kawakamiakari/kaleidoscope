@@ -103,3 +103,76 @@ export const builtInShapes: Record<ShapeName, ShapeDrawer> = {
     context.stroke();
   },
 };
+
+export interface PathShape {
+  /** SVG path data, e.g. the `d` attribute of an icon's `<path>`. */
+  path: string;
+  /**
+   * Coordinate system of the path, as a size (`24` for `0 0 24 24`) or an
+   * SVG `viewBox` string. The path is scaled to fit the particle size.
+   * @default 24
+   */
+  viewBox?: number | string;
+  /**
+   * Whether to fill the path or draw its outline.
+   * @default 'fill'
+   */
+  style?: 'fill' | 'stroke';
+  /**
+   * Line width for `style: 'stroke'`, in viewBox units.
+   * @default viewBox size / 10
+   */
+  lineWidth?: number;
+}
+
+export type ShapeDefinition = PathShape | ShapeDrawer;
+
+function parseViewBox(viewBox: number | string) {
+  if (typeof viewBox === 'number') {
+    return { x: 0, y: 0, width: viewBox, height: viewBox };
+  }
+  const [x = 0, y = 0, width = 24, height = 24] = viewBox
+    .trim()
+    .split(/[\s,]+/)
+    .map(Number);
+  return { x, y, width, height };
+}
+
+function createPathDrawer({
+  path,
+  viewBox = 24,
+  style = 'fill',
+  lineWidth,
+}: PathShape): ShapeDrawer {
+  const box = parseViewBox(viewBox);
+  const extent = Math.max(box.width, box.height);
+  let path2D: Path2D | null = null;
+
+  return (context, size) => {
+    // Created on first draw, so the definition can be built without a DOM.
+    path2D ??= new Path2D(path);
+
+    // Fit the viewBox into the size and center it on the origin.
+    const scale = size / extent;
+    context.scale(scale, scale);
+    context.translate(-box.x - box.width / 2, -box.y - box.height / 2);
+
+    if (style === 'stroke') {
+      context.lineWidth = lineWidth ?? extent / 10;
+      context.lineJoin = 'round';
+      context.lineCap = 'round';
+      context.stroke(path2D);
+    } else {
+      context.fill(path2D);
+    }
+  };
+}
+
+// Draws nothing, for unknown shape names (e.g. typos from JavaScript).
+const noop: ShapeDrawer = () => {};
+
+export function resolveShape(shape: ShapeName | ShapeDefinition): ShapeDrawer {
+  if (typeof shape === 'string') return builtInShapes[shape] ?? noop;
+  if (typeof shape === 'function') return shape;
+  return createPathDrawer(shape);
+}
