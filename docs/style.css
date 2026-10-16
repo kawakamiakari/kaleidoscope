@@ -11,6 +11,11 @@ body {
     'ヒラギノ角ゴ ProN W3', 'メイリオ', Meiryo, 'ＭＳ ゴシック', sans-serif;
 }
 
+#kaleidoscope {
+  /* An inline canvas leaves room for descenders below it and overflows. */
+  display: block;
+}
+
 #background {
   display: block;
   position: absolute;
