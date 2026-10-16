@@ -362,46 +362,17 @@
           'oval',
           'triangle',
         ];
-        // Custom shapes: SVG paths (filled or stroked) and a drawing function.
-        var customShapes = [
-          // Sparkle
-          {
-            path: 'M12 2C12.6 8.4 15.6 11.4 22 12C15.6 12.6 12.6 15.6 12 22C11.4 15.6 8.4 12.6 2 12C8.4 11.4 11.4 8.4 12 2Z',
-          },
-          // Cloud
-          {
-            path: 'M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z',
-          },
-          // Plus
-          { path: 'M12 5v14M5 12h14', style: 'stroke', lineWidth: 4 },
-          // Flower: five round petals
-          function (context, size) {
-            var r = size / 4;
-            context.beginPath();
-            for (var i = 0; i < 5; i += 1) {
-              var angle = (i * 2 * Math.PI) / 5;
-              var x = Math.cos(angle) * r;
-              var y = Math.sin(angle) * r;
-              context.moveTo(x + r, y);
-              context.arc(x, y, r, 0, 2 * Math.PI);
-            }
-            context.fill();
-          },
-        ];
-
-        // One custom shape and two built-in shapes.
-        var choose = [
-          customShapes[Math.floor(Math.random() * customShapes.length)],
-        ];
-        for (var i = 0; i < 2; i += 1) {
-          var random = Math.floor(Math.random() * shapes.length);
-          choose.push(shapes[random]);
-          shapes.splice(random, 1);
+        // Prefill the path input with a random path, unless it was edited.
+        var input = document.querySelector('#path-input');
+        if (!input.value.trim() || input.value === prefilledPath) {
+          prefilledPath =
+            babyPaths[Math.floor(Math.random() * babyPaths.length)];
+          input.value = prefilledPath;
         }
 
         baby = {
-          custom: choose[0],
-          builtIns: choose.slice(1),
+          path: null,
+          builtIn: shapes[Math.floor(Math.random() * shapes.length)],
           minSize: 40 + Math.floor(Math.random() * 20),
           maxSize: 60 + Math.floor(Math.random() * 20),
         };
@@ -411,12 +382,39 @@
       // Baby theme settings, kept so the SVG path input can swap the shape.
       var baby = null;
 
-      // Starts the Baby theme, using the SVG path input when it's valid.
+      // Paths the Baby theme picks from to prefill the SVG path input.
+      var babyPaths = [
+        // Sparkle
+        'M12 2C12.6 8.4 15.6 11.4 22 12C15.6 12.6 12.6 15.6 12 22C11.4 15.6 8.4 12.6 2 12C8.4 11.4 11.4 8.4 12 2Z',
+        // Cloud
+        'M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z',
+        // Moon
+        'M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z',
+      ];
+      var prefilledPath = null;
+
+      // A custom shape drawn by a function: a flower with five round petals.
+      function drawFlower(context, size) {
+        var r = size / 4;
+        context.beginPath();
+        for (var i = 0; i < 5; i += 1) {
+          var angle = (i * 2 * Math.PI) / 5;
+          var x = Math.cos(angle) * r;
+          var y = Math.sin(angle) * r;
+          context.moveTo(x + r, y);
+          context.arc(x, y, r, 0, 2 * Math.PI);
+        }
+        context.fill();
+      }
+
+      // Starts the Baby theme: the flower, the SVG path from the input and a
+      // built-in shape. Keeps the last valid path while the input is invalid.
       function createBaby() {
+        baby.path = userShape() || baby.path;
         kaleidoscope = new Kaleidoscope({
           selector: '#kaleidoscope',
           edge: 8,
-          shapes: [userShape() || baby.custom].concat(baby.builtIns),
+          shapes: [drawFlower, baby.path, baby.builtIn].filter(Boolean),
           minSize: baby.minSize,
           maxSize: baby.maxSize,
           color: ['#F7D1E2', '#ECE7BB', '#BBDFDD', '#D4ECF7'],
