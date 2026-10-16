@@ -335,8 +335,38 @@
           'oval',
           'triangle',
         ];
-        var choose = [];
-        for (var i = 0; i < 3; i += 1) {
+        // Custom shapes: SVG paths (filled or stroked) and a drawing function.
+        var customShapes = [
+          // Sparkle
+          {
+            path: 'M12 2C12.6 8.4 15.6 11.4 22 12C15.6 12.6 12.6 15.6 12 22C11.4 15.6 8.4 12.6 2 12C8.4 11.4 11.4 8.4 12 2Z',
+          },
+          // Cloud
+          {
+            path: 'M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z',
+          },
+          // Plus
+          { path: 'M12 5v14M5 12h14', style: 'stroke', lineWidth: 4 },
+          // Flower: five round petals
+          function (context, size) {
+            var r = size / 4;
+            context.beginPath();
+            for (var i = 0; i < 5; i += 1) {
+              var angle = (i * 2 * Math.PI) / 5;
+              var x = Math.cos(angle) * r;
+              var y = Math.sin(angle) * r;
+              context.moveTo(x + r, y);
+              context.arc(x, y, r, 0, 2 * Math.PI);
+            }
+            context.fill();
+          },
+        ];
+
+        // One custom shape and two built-in shapes.
+        var choose = [
+          customShapes[Math.floor(Math.random() * customShapes.length)],
+        ];
+        for (var i = 0; i < 2; i += 1) {
           var random = Math.floor(Math.random() * shapes.length);
           choose.push(shapes[random]);
           shapes.splice(random, 1);
