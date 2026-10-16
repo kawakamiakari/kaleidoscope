@@ -4,22 +4,16 @@ body {
   height: 100%;
 }
 
-@media (min-width: 0) {
-  html {
-    font-size: 24px;
-  }
-}
-@media (min-width: 992px) {
-  html {
-    font-size: 16px;
-  }
-}
-
 body {
   margin: 0;
   font-family:
     'Titillium Web', YuGothic, 'Yu Gothic', 'Hiragino Kaku Gothic ProN',
     'ヒラギノ角ゴ ProN W3', 'メイリオ', Meiryo, 'ＭＳ ゴシック', sans-serif;
+}
+
+#kaleidoscope {
+  /* An inline canvas leaves room for descenders below it and overflows. */
+  display: block;
 }
 
 #background {
@@ -51,15 +45,37 @@ body {
   text-align: center;
 }
 
+/*
+ * Center the gap between the title and the buttons on the kaleidoscope:
+ * rows of 1fr in an auto-height grid share the height of the taller one.
+ * The snippet panel sits outside, so opening it shifts everything up.
+ */
+.halves {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+}
+.upper {
+  align-self: end;
+  padding-bottom: 2.5rem;
+}
+.lower {
+  align-self: start;
+  padding-top: 2.5rem;
+}
+.lower > p:first-child {
+  margin-top: 0;
+}
+
 .title {
   margin: 0;
-  font-size: 3.75rem;
+  font-size: clamp(2rem, 11vw, 3.75rem);
   font-weight: bold;
   letter-spacing: 0.2em;
 }
 
 .description {
-  margin: 0 0 5rem 0;
+  margin: 0;
+  padding: 0 1rem;
 }
 
 .button {
@@ -67,8 +83,22 @@ body {
   transition: 0.25s;
 }
 
+button.button {
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.button:focus-visible {
+  outline: currentColor solid 2px;
+  outline-offset: 3px;
+}
+
 .button.change-bg {
-  display: inline-block;
+  display: inline-flex;
+  box-sizing: content-box;
+  justify-content: center;
+  align-items: center;
   margin: 0 1.25rem;
   width: 2.5rem;
   height: 2.5rem;
@@ -80,9 +110,9 @@ body {
 }
 
 .button.change-bg .icon {
+  display: block;
   width: 1.5rem;
   height: 1.5rem;
-  vertical-align: middle;
 }
 
 .button.change-bg.def {
@@ -122,10 +152,12 @@ body {
 }
 
 .button.link {
-  display: inline-block;
-  min-width: 9rem;
-  margin: 0 1.25rem;
-  padding: 0.625rem;
+  display: inline-flex;
+  box-sizing: content-box;
+  gap: 0.3em;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 0.875rem;
   text-align: center;
   font-size: 1.1rem;
   text-shadow: none;
@@ -135,11 +167,145 @@ body {
 }
 
 .button.link .icon {
+  display: block;
   width: 1.1rem;
   height: 1.1rem;
 }
 
+.links {
+  /* Equal-width columns sized by the widest button. */
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 1.25rem;
+  width: max-content;
+  margin-inline: auto;
+}
+
+.get-started {
+  margin-top: 1.25rem;
+}
+
+.toggle {
+  padding: 0.25rem 0.5rem;
+  font: inherit;
+  color: inherit;
+  text-shadow:
+    1px 1px 0 var(--bg),
+    -1px 1px 0 var(--bg),
+    1px -1px 0 var(--bg),
+    -1px -1px 0 var(--bg);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+.toggle:hover {
+  text-decoration: underline;
+}
+.toggle:focus-visible {
+  outline: currentColor solid 2px;
+  outline-offset: 3px;
+}
+.toggle::after {
+  display: inline-block;
+  margin-left: 0.3em;
+}
+.toggle::after {
+  content: '\25BE';
+  transition: transform 0.3s ease;
+}
+.toggle[aria-expanded='true']::after {
+  transform: rotate(180deg);
+}
+
+/* Collapsible panel: animate the row height from 0 to its content. */
+.snippet-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition:
+    grid-template-rows 0.3s ease,
+    visibility 0s 0.3s;
+}
+.snippet-panel.open {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition:
+    grid-template-rows 0.3s ease,
+    visibility 0s;
+}
+.snippet-panel-inner {
+  min-height: 0;
+  /* Room so the clipping doesn't cut the blurred panel's bottom border. */
+  padding-bottom: 2px;
+  overflow: hidden;
+}
+
+.snippet {
+  box-sizing: border-box;
+  max-width: min(40rem, 90vw);
+  margin: 1.25rem auto 0;
+  overflow: hidden;
+  text-align: left;
+  border: currentColor solid 1px;
+  border-radius: 3px;
+  backdrop-filter: blur(25px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.snippet-panel.open .snippet {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle::after,
+  .snippet-panel,
+  .snippet-panel.open,
+  .snippet {
+    transition: none;
+  }
+}
+
+.snippet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem 0.5rem 1rem;
+  font-size: 0.8rem;
+  border-bottom: currentColor solid 1px;
+}
+
+.snippet pre {
+  margin: 0;
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  background: color-mix(in srgb, var(--fg) 8%, var(--bg));
+}
+
+.snippet-note {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+}
+
+.snippet .copy {
+  padding: 0.25rem 0.75rem;
+  font: inherit;
+  color: var(--bg);
+  background: var(--fg);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.snippet .copy:hover {
+  opacity: 0.8;
+}
+
 body.default {
+  --fg: #000;
+  --bg: #fff;
   color: #000;
   background: #fff;
 }
@@ -170,6 +336,8 @@ body.default .button.link:active {
 }
 
 body.valentine {
+  --fg: #5f4842;
+  --bg: #f7e1d7;
   color: #5f4842;
   background: #f7e1d7;
 }
@@ -200,6 +368,8 @@ body.valentine .button.link:active {
 }
 
 body.garden {
+  --fg: #443650;
+  --bg: #72b7a6;
   color: #443650;
   background: #72b7a6;
 }
@@ -230,6 +400,8 @@ body.garden .button.link:active {
 }
 
 body.midnight {
+  --fg: #fff;
+  --bg: #0a1128;
   color: #fff;
   background: #0a1128;
 }
@@ -260,6 +432,8 @@ body.midnight .button.link:active {
 }
 
 body.baby {
+  --fg: #59656f;
+  --bg: #ecfdff;
   color: #59656f;
   background: #ecfdff;
 }
@@ -287,4 +461,20 @@ body.baby .button.link:hover,
 body.baby .button.link:active {
   color: #ecfdff;
   background: #59656f;
+}
+
+/* Phones */
+@media (max-width: 480px) {
+  .button.change-bg {
+    margin: 0 0.5rem;
+  }
+
+  .links {
+    gap: 0.5rem;
+  }
+
+  .button.link {
+    padding: 0.5rem 0.625rem;
+    font-size: 0.9rem;
+  }
 }
