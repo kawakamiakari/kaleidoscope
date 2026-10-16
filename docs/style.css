@@ -40,11 +40,14 @@ body {
   text-align: center;
 }
 
-/* Center the gap between the title and the buttons on the kaleidoscope. */
-.inner {
+/*
+ * Center the gap between the title and the buttons on the kaleidoscope:
+ * rows of 1fr in an auto-height grid share the height of the taller one.
+ * The snippet panel sits outside, so opening it shifts everything up.
+ */
+.halves {
   display: grid;
   grid-template-rows: 1fr 1fr;
-  align-self: stretch;
 }
 .upper {
   align-self: end;

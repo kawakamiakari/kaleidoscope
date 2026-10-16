@@ -28,122 +28,124 @@
     <div class="contents">
       <div class="inner">
         <!-- Title above and buttons below the kaleidoscope's center. -->
-        <div class="upper">
-          <h1 class="title">Kaleidoscope</h1>
-          <p class="description">
-            A lightweight JavaScript plugin for particle backgrounds.
-          </p>
+        <div class="halves">
+          <div class="upper">
+            <h1 class="title">Kaleidoscope</h1>
+            <p class="description">
+              A lightweight JavaScript plugin for particle backgrounds.
+            </p>
+          </div>
+          <div class="lower">
+            <p>
+              <button
+                type="button"
+                class="button change-bg def"
+                onclick="showDefault()"
+                aria-label="Default theme"
+                aria-pressed="true"
+                title="Default"
+              >
+                <img class="icon" src="icons/trip_origin-24px.svg" alt="" />
+              </button>
+              <button
+                type="button"
+                class="button change-bg val"
+                onclick="showValentine()"
+                aria-label="Valentine theme"
+                aria-pressed="false"
+                title="Valentine"
+              >
+                <img class="icon" src="icons/favorite-24px.svg" alt="" />
+              </button>
+              <button
+                type="button"
+                class="button change-bg gar"
+                onclick="showGarden()"
+                aria-label="Garden theme"
+                aria-pressed="false"
+                title="Garden"
+              >
+                <img class="icon" src="icons/eco-24px.svg" alt="" />
+              </button>
+              <button
+                type="button"
+                class="button change-bg mid"
+                onclick="showMidnight()"
+                aria-label="Midnight theme"
+                aria-pressed="false"
+                title="Midnight"
+              >
+                <img class="icon" src="icons/nights_stay-24px.svg" alt="" />
+              </button>
+              <button
+                type="button"
+                class="button change-bg bab"
+                onclick="showBaby()"
+                aria-label="Baby theme"
+                aria-pressed="false"
+                title="Baby"
+              >
+                <img class="icon" src="icons/category-24px.svg" alt="" />
+              </button>
+            </p>
+            <p class="links">
+              <a
+                class="button link"
+                href="https://github.com/kawakamiakari/kaleidoscope"
+              >
+                <img
+                  class="icon"
+                  src="icons/GitHub-Mark-120px-plus.png"
+                  alt=""
+                />
+                GitHub
+              </a>
+              <a
+                class="button link"
+                href="https://www.npmjs.com/package/ak-kaleidoscope"
+              >
+                <img class="icon" src="icons/package-24px.svg" alt="" />
+                <span id="npm-label">npm</span>
+              </a>
+              <a
+                class="button link"
+                href="https://github.com/kawakamiakari/kaleidoscope/releases/latest/download/kaleidoscope.min.js"
+              >
+                <img class="icon" src="icons/cloud_download-24px.svg" alt="" />
+                Download
+              </a>
+            </p>
+            <div class="get-started">
+              <button
+                type="button"
+                class="toggle"
+                aria-expanded="false"
+                aria-controls="snippet-panel"
+                onclick="toggleSnippet(this)"
+              >
+                Get started
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="lower">
-          <p>
-            <button
-              type="button"
-              class="button change-bg def"
-              onclick="showDefault()"
-              aria-label="Default theme"
-              aria-pressed="true"
-              title="Default"
-            >
-              <img class="icon" src="icons/trip_origin-24px.svg" alt="" />
-            </button>
-            <button
-              type="button"
-              class="button change-bg val"
-              onclick="showValentine()"
-              aria-label="Valentine theme"
-              aria-pressed="false"
-              title="Valentine"
-            >
-              <img class="icon" src="icons/favorite-24px.svg" alt="" />
-            </button>
-            <button
-              type="button"
-              class="button change-bg gar"
-              onclick="showGarden()"
-              aria-label="Garden theme"
-              aria-pressed="false"
-              title="Garden"
-            >
-              <img class="icon" src="icons/eco-24px.svg" alt="" />
-            </button>
-            <button
-              type="button"
-              class="button change-bg mid"
-              onclick="showMidnight()"
-              aria-label="Midnight theme"
-              aria-pressed="false"
-              title="Midnight"
-            >
-              <img class="icon" src="icons/nights_stay-24px.svg" alt="" />
-            </button>
-            <button
-              type="button"
-              class="button change-bg bab"
-              onclick="showBaby()"
-              aria-label="Baby theme"
-              aria-pressed="false"
-              title="Baby"
-            >
-              <img class="icon" src="icons/category-24px.svg" alt="" />
-            </button>
-          </p>
-          <p class="links">
-            <a
-              class="button link"
-              href="https://github.com/kawakamiakari/kaleidoscope"
-            >
-              <img class="icon" src="icons/GitHub-Mark-120px-plus.png" alt="" />
-              GitHub
-            </a>
-            <a
-              class="button link"
-              href="https://www.npmjs.com/package/ak-kaleidoscope"
-            >
-              <img class="icon" src="icons/package-24px.svg" alt="" />
-              <span id="npm-label">npm</span>
-            </a>
-            <a
-              class="button link"
-              href="https://github.com/kawakamiakari/kaleidoscope/releases/latest/download/kaleidoscope.min.js"
-            >
-              <img class="icon" src="icons/cloud_download-24px.svg" alt="" />
-              Download
-            </a>
-          </p>
-          <div class="get-started">
-            <button
-              type="button"
-              class="toggle"
-              aria-expanded="false"
-              aria-controls="snippet-panel"
-              onclick="toggleSnippet(this)"
-            >
-              Get started
-            </button>
-            <div class="snippet-panel" id="snippet-panel">
-              <div class="snippet-panel-inner">
-                <div class="snippet">
-                  <div class="snippet-header">
-                    <span>Add to your HTML</span>
-                    <button
-                      type="button"
-                      class="copy"
-                      onclick="copySnippet(this)"
-                    >
-                      Copy
-                    </button>
-                  </div>
-                  <pre><code id="snippet-code">&lt;canvas id="kaleidoscope"&gt;&lt;/canvas&gt;
+        <div class="snippet-panel" id="snippet-panel">
+          <div class="snippet-panel-inner">
+            <div class="snippet">
+              <div class="snippet-header">
+                <span>Add to your HTML</span>
+                <button type="button" class="copy" onclick="copySnippet(this)">
+                  Copy
+                </button>
+              </div>
+              <pre><code id="snippet-code">&lt;canvas id="kaleidoscope"&gt;&lt;/canvas&gt;
 &lt;script src="https://cdn.jsdelivr.net/npm/ak-kaleidoscope@2/dist/kaleidoscope.min.js"&gt;&lt;/script&gt;
 &lt;script&gt;
   new Kaleidoscope({ selector: '#kaleidoscope' });
 &lt;/script&gt;</code></pre>
-                  <p class="snippet-note">
-                    Or install with npm:
-                    <code>npm install ak-kaleidoscope</code>
-                  </p>
-                </div>
-              </div>
+              <p class="snippet-note">
+                Or install with npm:
+                <code>npm install ak-kaleidoscope</code>
+              </p>
             </div>
           </div>
         </div>
