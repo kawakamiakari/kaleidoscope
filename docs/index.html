@@ -36,7 +36,7 @@
             </p>
           </div>
           <div class="lower">
-            <p>
+            <p class="themes">
               <button
                 type="button"
                 class="button change-bg def"
@@ -88,6 +88,30 @@
                 <img class="icon" src="icons/category-24px.svg" alt="" />
               </button>
             </p>
+            <!-- Baby theme only: try your own SVG path. -->
+            <div class="path-panel" id="path-panel">
+              <div class="path-panel-inner">
+                <div class="path-panel-content">
+                  <div class="path-field">
+                    <label for="path-input">SVG path</label>
+                    <input
+                      id="path-input"
+                      class="path-input"
+                      type="text"
+                      placeholder="M12 2C12.6 8.4 15.6 11.4 22 12…"
+                      spellcheck="false"
+                      autocomplete="off"
+                      autocapitalize="off"
+                      aria-describedby="path-hint"
+                      oninput="onPathInput()"
+                    />
+                  </div>
+                  <p class="path-hint" id="path-hint" aria-live="polite">
+                    Paste the d attribute of an SVG path
+                  </p>
+                </div>
+              </div>
+            </div>
             <p class="links">
               <a
                 class="button link"
@@ -223,6 +247,9 @@
             String(button.classList.contains(name)),
           );
         });
+        document
+          .querySelector('#path-panel')
+          .classList.toggle('open', name === 'bab');
       }
 
       // Optional usage.
@@ -372,15 +399,77 @@
           shapes.splice(random, 1);
         }
 
+        baby = {
+          custom: choose[0],
+          builtIns: choose.slice(1),
+          minSize: 40 + Math.floor(Math.random() * 20),
+          maxSize: 60 + Math.floor(Math.random() * 20),
+        };
+        createBaby();
+      }
+
+      // Baby theme settings, kept so the SVG path input can swap the shape.
+      var baby = null;
+
+      // Starts the Baby theme, using the SVG path input when it's valid.
+      function createBaby() {
         kaleidoscope = new Kaleidoscope({
           selector: '#kaleidoscope',
           edge: 8,
-          shapes: choose,
-          minSize: 40 + Math.floor(Math.random() * 20),
-          maxSize: 60 + Math.floor(Math.random() * 20),
+          shapes: [userShape() || baby.custom].concat(baby.builtIns),
+          minSize: baby.minSize,
+          maxSize: baby.maxSize,
           color: ['#F7D1E2', '#ECE7BB', '#BBDFDD', '#D4ECF7'],
           quantity: 30,
         });
+      }
+
+      // Reads the SVG path input as a shape, fitting the viewBox to the path.
+      function userShape() {
+        var d = document.querySelector('#path-input').value.trim();
+        var hint = document.querySelector('#path-hint');
+        hint.textContent = 'Paste the d attribute of an SVG path';
+        if (!d) return null;
+
+        var box = measurePath(d);
+        if (!box) {
+          hint.textContent = "Couldn't read this path";
+          return null;
+        }
+        return {
+          path: d,
+          viewBox: [box.x, box.y, box.width, box.height].join(' '),
+        };
+      }
+
+      // Returns the bounding box of SVG path data, or null if it's empty.
+      function measurePath(d) {
+        var ns = 'http://www.w3.org/2000/svg';
+        var svg = document.createElementNS(ns, 'svg');
+        var path = document.createElementNS(ns, 'path');
+        svg.setAttribute('width', '0');
+        svg.setAttribute('height', '0');
+        svg.style.position = 'absolute';
+        path.setAttribute('d', d);
+        svg.appendChild(path);
+        document.body.appendChild(svg);
+        var box = path.getBBox();
+        svg.remove();
+        return box.width > 0 || box.height > 0 ? box : null;
+      }
+
+      // Rebuilds the Baby theme shortly after typing stops.
+      var pathInputTimer;
+      function onPathInput() {
+        clearTimeout(pathInputTimer);
+        pathInputTimer = setTimeout(function () {
+          if (!baby || !document.body.classList.contains('baby')) return;
+          kaleidoscope.destroy();
+          var canvas = document.createElement('canvas');
+          canvas.id = 'kaleidoscope';
+          document.querySelector('#background').appendChild(canvas);
+          createBaby();
+        }, 300);
       }
     </script>
   </body>
